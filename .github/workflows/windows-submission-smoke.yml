@@ -1,0 +1,67 @@
+name: Native Windows submission smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - name: Fetch fixed public commit and run synthetic smoke
+        shell: pwsh
+        env:
+          SMOKE_SHA: ${{ github.sha }}
+          SMOKE_REPOSITORY: ${{ github.repository }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sha = $env:SMOKE_SHA
+          $repository = $env:SMOKE_REPOSITORY
+          if ($sha -cnotmatch '^[0-9a-f]{40}$') { throw 'Invalid fixed commit' }
+          if ($repository -cne 'ZeroGen-Lab/ML-Assignment-1') { throw 'Unexpected repository' }
+          $roots = @($env:AGENT_TOOLSDIRECTORY, $env:RUNNER_TOOL_CACHE) |
+            Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -Unique
+          $python = $null
+          foreach ($root in $roots) {
+            $pythonRoot = Join-Path $root 'Python'
+            if (-not (Test-Path -LiteralPath $pythonRoot)) { continue }
+            $versions = Get-ChildItem -LiteralPath $pythonRoot -Directory |
+              Where-Object { $_.Name -match '^3\.10\.\d+$' } |
+              Sort-Object { [version]$_.Name } -Descending
+            foreach ($version in $versions) {
+              $candidate = Join-Path $version.FullName 'x64/python.exe'
+              if (Test-Path -LiteralPath $candidate -PathType Leaf) { $python = $candidate; break }
+            }
+            if ($python) { break }
+          }
+          if (-not $python) {
+            $candidate = Get-Command python.exe -ErrorAction SilentlyContinue
+            if ($candidate) { $python = $candidate.Source }
+          }
+          if (-not $python) { throw 'NOT_RUN: no installed Python >=3.10' }
+          & $python -I -B -c "import os,sys; assert os.name == 'nt'; assert sys.version_info >= (3,10); print('ACTUAL_PYTHON',sys.version)"
+          if ($LASTEXITCODE -ne 0) { throw 'NOT_RUN: installed Python does not satisfy smoke requirements' }
+          $jobRoot = Join-Path $env:RUNNER_TEMP ('public-smoke-' + [guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $jobRoot -ErrorAction Stop | Out-Null
+          $zip = Join-Path $jobRoot 'fixed-source.zip'
+          $uri = 'https://codeload.github.com/' + $repository + '/zip/' + $sha
+          Invoke-WebRequest -Uri $uri -OutFile $zip -MaximumRedirection 0
+          Write-Host ('FIXED_COMMIT ' + $sha)
+          Write-Host ('SOURCE_ZIP_SHA256 ' + (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant())
+          $expanded = Join-Path $jobRoot 'source'
+          Expand-Archive -LiteralPath $zip -DestinationPath $expanded
+          $source = Join-Path $expanded ('ML-Assignment-1-' + $sha)
+          if (-not (Test-Path -LiteralPath $source -PathType Container)) { throw 'Fixed commit ZIP root mismatch' }
+          $script = Join-Path $source '.github/scripts/windows_submission_smoke.py'
+          if (-not (Test-Path -LiteralPath $script -PathType Leaf)) { throw 'Fixed commit smoke script missing' }
+          $env:PYTHONUTF8 = '1'
+          Push-Location -LiteralPath $source
+          try {
+            & $python -B $script
+            if ($LASTEXITCODE -ne 0) { throw 'Native synthetic smoke failed' }
+          } finally {
+            Pop-Location
+          }

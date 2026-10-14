@@ -7,7 +7,7 @@
 在同时包含 `starter/`、`student_tools/`、`docs/` 的解压根目录执行：
 
 ```sh
-python3 -B -m student_tools selftest --project starter --tasks lr,svm,kmeans,hmm --public-data data/public/validation
+python3 -B -m student_tools selftest --project starter --tasks lr,svm,kmeans,hmm --public-data data/public
 python3 -B -m student_tools package --project starter --output submission.zip
 ```
 
@@ -54,6 +54,6 @@ export STUDENT_NICKNAME="你的昵称"
 
 学号按字符串处理，保留前导零；提交及结果按学号归属，配置检查不是本人认证。教师权限独立。AI辅助和自主完成均可提交，不直接加扣分；AI使用说明随ZIP提交，工具的`ai_assisted`/`independent`标签仍须逐提交按实际情况声明，文档不替代该标签。
 
-公开练习数据在解压根目录 `data/public/training/`：classification.json供LR/SVM共用，另有gbdt.json、kmeans.json、hmm.json；`data/public/validation/`含五任务公开诊断输入、答案及manifest。选择已实现任务自测，GBDT可加入 `--tasks` 列表；公开数据不随作业源码提交。
+公开训练数据在解压根目录 `data/public/training/`：`lr-train.csv`（LR，WDBC，30维）、`svm-train.csv`（SVM，Spambase，57维）、`gbdt-train.csv`（GBDT，CCPP，4维）、`kmeans-train.csv`（KMeans，Seeds，7维，K=3，无公开类别标签）、`hmm-train.csv`（监督HMM，3状态、4观测符号，每条20步）。`data/public/`含五任务公开诊断输入、诊断答案及 `manifest.json`；KMeans诊断无类别真值。来源与许可见解压根目录 `data/public/training/DATA-SOURCES.md`。选择已实现任务自测，GBDT可加入 `--tasks` 列表；公开数据不随作业源码提交。
 
 完整使用说明见解压根目录 `docs/student-guide.md`。包内 `public/leaderboard.html` 可直接打开；file离线预览显示“暂无成绩”，不请求网络、不生成排名。真实提交、查询与成绩开放以课程公告为准，本机诊断不是课程成绩。

@@ -21,12 +21,12 @@
 
 ## 3. 公开练习与本机诊断
 
-完整学生包内的`data/public/training/`包含classification.json（LR/SVM共用）、gbdt.json、kmeans.json、hmm.json；`data/public/validation/`包含五任务各自的公开输入、答案和manifest。公开数据不是隐藏正式测试，不能加入作业提交ZIP。
+完整学生包内的 `data/public/training/` 包含五份训练CSV：`lr-train.csv`（LR，WDBC，30维）、`svm-train.csv`（SVM，Spambase，57维）、`gbdt-train.csv`（GBDT，CCPP，4维）、`kmeans-train.csv`（KMeans，Seeds，7维，K=3，无公开类别标签）、`hmm-train.csv`（监督HMM，3状态、4观测符号，每条20步）。`data/public/` 包含五任务各自的公开诊断输入、诊断答案和 `manifest.json`；KMeans诊断无类别真值。来源与许可见解压根目录 `data/public/training/DATA-SOURCES.md`。公开数据不是隐藏正式测试，不能加入作业提交ZIP。
 
 在解压根目录选择已实现任务诊断，例如：
 
 ```sh
-python3 -B -m student_tools selftest --project starter --tasks lr,svm,kmeans,hmm --public-data data/public/validation
+python3 -B -m student_tools selftest --project starter --tasks lr,svm,kmeans,hmm --public-data data/public
 python3 -B -m student_tools package --project starter --output submission.zip
 ```
 
