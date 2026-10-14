@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ML Assignment 1</title>
+<style>
+body { margin: 0; padding: 24px 16px; font-family: sans-serif; line-height: 1.75; color: #24303c; background: #f6f9fb; }
+main { max-width: 860px; margin: auto; }
+p, li, td, th, nav { overflow-wrap: anywhere; }
+a { color: #1f6f8b; }
+a:focus-visible, pre:focus-visible, .table-scroll:focus-visible { outline: 3px solid #1f6f8b; outline-offset: 3px; }
+pre, .table-scroll { max-width: 100%; overflow-x: auto; }
+pre { padding: 12px; box-sizing: border-box; background: #eaf0f4; }
+code { font-family: monospace; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px; border: 1px solid #ccd7df; text-align: left; }
+@media (max-width: 560px) { body { padding: 16px 12px; } h1 { font-size: 1.55em; } }
+</style>
+</head>
+<body>
+<main>
+<nav aria-label="文档阅读导航"><a href="public/index.html">课程说明</a> · <a href="README.html">学生 README</a> · <a href="docs/student-guide.html">学生指南</a> · <a href="docs/assignment-scoring-rules-20261010.html">完整评分规则</a> · <a href="starter/README.html">模板说明</a> · <a href="starter/AI_USAGE.html">AI 使用说明</a> · <a href="README.md">Markdown 原文</a></nav>
+<h1>ML Assignment 1</h1>
+<p>本课程五项 C++17 算法作业：逻辑回归、SVM、GBDT、KMeans、监督 HMM。每项 25 分，选五取四计 100 分，占课程总评 35%。只提交指定源码与 AI 使用声明；客户端自报分数不作为正式评分。</p>
+<h2>先看什么</h2>
+<p>阅读 <a href="docs/student-guide.html">学生指南</a>、<a href="docs/assignment-scoring-rules-20261010.html">评分规则</a> 和 <a href="starter/README.html">模板说明</a>。实现接口位于 <code>starter/include/assignment.hpp</code>，模板位于 <code>starter/src/assignment.cpp</code>；模板能编译不代表算法已完成。</p>
+<h2>数据与公开诊断</h2>
+<p>数据版本 <code>course-uci-20261014-v1</code>；公开训练 CSV、来源许可与精确 SHA 位于 <code>data/public/training/</code>。</p>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>任务</th><th>数据</th><th>维度/结构</th><th>正式训练/测试</th></tr></thead><tbody><tr><td>LR</td><td>WDBC</td><td>30 维，0/1</td><td>454 / 115</td></tr><tr><td>SVM</td><td>Spambase</td><td>57 维，0/1</td><td>1194 / 606</td></tr><tr><td>GBDT</td><td>CCPP</td><td>4 维回归</td><td>1199 / 601</td></tr><tr><td>KMeans</td><td>Seeds</td><td>7 维，k=3，无公开类别标签</td><td>168 / 42</td></tr><tr><td>HMM</td><td>监督序列</td><td>3 状态、4 符号、每条 20 步</td><td>60 / 30 条</td></tr></tbody></table></div>
+<p>数值特征已用正式训练集拟合后标准化，不要重复标准化。HMM 保留完整序列。课程不发布正式测试集；UCI 原始数据公开，原始标签可能从公开来源恢复，因此不能声称正式测试标签不可恢复。</p>
+<p><code>data/public/</code> 根目录的十个诊断成员及 <code>manifest.json</code> 是从公开训练部分划出的本地诊断，不是正式 holdout 或正式分数。连续任务使用 120/30 行，HMM 使用 8/2 条完整序列；KMeans 只做无标签诊断，不报告有真值的 ARI/NMI。</p>
+<h2>本地运行</h2>
+<pre tabindex="0"><code class="language-sh">python3 -B -m student_tools.identity
+python3 -B -m student_tools.selftest --project starter --public-data data/public --tasks lr,svm,gbdt,kmeans,hmm
+python3 -B -m student_tools.package --project starter --output submission.zip</code></pre>
+<p>新版公开诊断完整命令见学生指南随包说明。空模板或占位输出可能失败，不能据此宣称算法完成。源码 ZIP 不带训练 CSV；本地诊断分数不作为正式成绩。</p>
+<p>身份使用自报学号、姓名与昵称，不设置个人 token/密码；自报身份不证明本人。服务地址与开放状态以课程另行通知为准，本 README 不提供虚构生产 URL。</p>
+<h2>安全边界</h2>
+<p>本机自测由你主动运行自己的程序，<strong>不是沙箱</strong>。静态网页/GitHub Pages 不运行正式学生提交。教师评分物料、正式 holdout、truth、DB、名册与凭据不属于学生发行包。</p>
+<nav aria-label="返回文档导航"><a href="public/index.html">课程说明</a> · <a href="README.html">学生 README</a> · <a href="docs/student-guide.html">学生指南</a> · <a href="docs/assignment-scoring-rules-20261010.html">完整评分规则</a> · <a href="starter/README.html">模板说明</a> · <a href="starter/AI_USAGE.html">AI 使用说明</a> · <a href="README.md">Markdown 原文</a></nav>
+</main>
+</body>
+</html>

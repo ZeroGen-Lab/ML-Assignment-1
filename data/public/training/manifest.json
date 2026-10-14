@@ -1,0 +1,178 @@
+{
+  "accepting_tasks": false,
+  "classification_labels": "0/1",
+  "cleanup_complete": false,
+  "counts": {
+    "gbdt": {
+      "dimensions": 4,
+      "k": null,
+      "sequence_length": null,
+      "task_dataset_id": "4117695ac26d0c8abe16fcb9ddf6480a70d758afbcc9bcc8e27e3e57d8c49ec2",
+      "test_rows": 601,
+      "train_rows": 1199
+    },
+    "hmm": {
+      "dimensions": null,
+      "k": null,
+      "sequence_length": 20,
+      "task_dataset_id": "588afb65a06d9b8875518ccd07f28f313dfbe08704bab98ad468694013c3e8cb",
+      "test_rows": 30,
+      "train_rows": 60
+    },
+    "kmeans": {
+      "dimensions": 7,
+      "k": 3,
+      "sequence_length": null,
+      "task_dataset_id": "b9240e587b99868a9f92be3de4445ac4c2a11d4d2c39109e0654e2419cb2c94b",
+      "test_rows": 42,
+      "train_rows": 168
+    },
+    "lr": {
+      "dimensions": 30,
+      "k": null,
+      "sequence_length": null,
+      "task_dataset_id": "f98cfbbc9ff794f0c84db3debc33498c3f6d077a993d1ba0e70b196f97231d37",
+      "test_rows": 115,
+      "train_rows": 454
+    },
+    "svm": {
+      "dimensions": 57,
+      "k": null,
+      "sequence_length": null,
+      "task_dataset_id": "57230c0c5b27e38368a1a4b0b44bf3fbbb92883576a57d7795610d3ac90b5411",
+      "test_rows": 606,
+      "train_rows": 1194
+    }
+  },
+  "data_version": "course-uci-20261014-v1",
+  "dataset_id": "db695906b8e038e25f82cec2e4eaa7e5224eaa8121eab0b7f569184a14457529",
+  "files": {
+    "gbdt-train.csv": {
+      "bytes": 102104,
+      "sha256": "28d101ee54f52bee1ac6eb25dd2bfaf2d81a4f3b51159a0da727b298f24fa747"
+    },
+    "hmm-train.csv": {
+      "bytes": 11241,
+      "sha256": "9e827507d2a448a8967ccea66ee34c248208405fd6f1b2bb1489089c55be4039"
+    },
+    "kmeans-train.csv": {
+      "bytes": 23054,
+      "sha256": "f2aa6185b7aaed9aac5a7fe421db9ef410567e4013a3c1ebd30e2e52d358d450"
+    },
+    "lr-train.csv": {
+      "bytes": 269958,
+      "sha256": "8d377999ca2d77384f69baf5d1f36c5db16a0b217e7915492554a8134a78445d"
+    },
+    "svm-train.csv": {
+      "bytes": 1381529,
+      "sha256": "d865e72706ea867c2cf56ac9c0d80584152ae56cc5cc031cbb28cbeef8f73e69"
+    }
+  },
+  "formal_ready": false,
+  "hmm": "60 intact sequences x 20; supervised states 0..2",
+  "holdout_policy": "not-course-published; original public labels may be recoverable",
+  "kmeans_class_labels_published": false,
+  "kmeans_k": 3,
+  "preprocessing": "already-train-standardized-do-not-scale-again",
+  "production_ready": false,
+  "published": false,
+  "schema": "course-uci-training-csv-v1",
+  "sources": {
+    "ccpp": {
+      "authors": [
+        "Tufekci, P.",
+        "Kaya, H."
+      ],
+      "ccpp_sheet": 1,
+      "clean_csv_rows": 9527,
+      "clean_csv_sha256": "43500163d6a9feb416e755e41a4d346b66c0a52f7b81f88db093db15ac4dce48",
+      "cleaning": "existing-conflict-and-exact-dedup",
+      "doi": "10.24432/C5002N",
+      "download_date": "2026-10-07",
+      "landing": "https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant",
+      "license": "CC BY 4.0",
+      "members": [
+        "CCPP/Folds5x2_pp.xlsx",
+        "CCPP/Folds5x2_pp.ods",
+        "CCPP/Readme.txt"
+      ],
+      "sha256": "cc7b2a4977c0a44e8221c91d9a7e5746b3c68186cff7e5c61c70af6432b98c7a",
+      "title": "Combined Cycle Power Plant",
+      "url": "https://archive.ics.uci.edu/static/public/294/combined+cycle+power+plant.zip",
+      "year": 2014
+    },
+    "seeds": {
+      "authors": [
+        "Charytanowicz, M.",
+        "Niewczas, J.",
+        "Kulczycki, P.",
+        "Kowalski, P.",
+        "Lukasik, S."
+      ],
+      "ccpp_sheet": null,
+      "clean_csv_rows": 210,
+      "clean_csv_sha256": "97cb65520038418d4c3f82a36e5f19c20264c4cf610954a43967c13671cf48a4",
+      "cleaning": "existing-conflict-and-exact-dedup",
+      "doi": "10.24432/C5H30K",
+      "download_date": "2026-10-07",
+      "landing": "https://archive.ics.uci.edu/dataset/236/seeds",
+      "license": "CC BY 4.0",
+      "members": [
+        "seeds_dataset.txt"
+      ],
+      "sha256": "5033bd71b24592fa70d9b3cc5be02332dc6d03d0b27e6655e6d553f39afab323",
+      "title": "Seeds",
+      "url": "https://archive.ics.uci.edu/static/public/236/seeds.zip",
+      "year": 2010
+    },
+    "spambase": {
+      "authors": [
+        "Hopkins, M.",
+        "Reeber, E.",
+        "Forman, G.",
+        "Suermondt, J."
+      ],
+      "ccpp_sheet": null,
+      "clean_csv_rows": 4204,
+      "clean_csv_sha256": "9b726e01501e0be98913f3948c1e50ee715e1a285c47be2f45563d766936cc81",
+      "cleaning": "existing-conflict-and-exact-dedup",
+      "doi": "10.24432/C53G6X",
+      "download_date": "2026-10-07",
+      "landing": "https://archive.ics.uci.edu/dataset/94/spambase",
+      "license": "CC BY 4.0",
+      "members": [
+        "spambase.data",
+        "spambase.names",
+        "spambase.DOCUMENTATION"
+      ],
+      "sha256": "813ac1df8effac70463c09c9c4b11e8803eefcab54771af66150852bcdcd1636",
+      "title": "Spambase",
+      "url": "https://archive.ics.uci.edu/static/public/94/spambase.zip",
+      "year": 1999
+    },
+    "wdbc": {
+      "authors": [
+        "Wolberg, W.",
+        "Mangasarian, O.",
+        "Street, W.",
+        "Street, N."
+      ],
+      "ccpp_sheet": null,
+      "clean_csv_rows": 569,
+      "clean_csv_sha256": "cea4de03dbd7ba00f45fcb7e95ced5e922795afb3be2671b404240868d6a5c0d",
+      "cleaning": "existing-conflict-and-exact-dedup",
+      "doi": "10.24432/C5DW2B",
+      "download_date": "2026-10-07",
+      "landing": "https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic",
+      "license": "CC BY 4.0",
+      "members": [
+        "wdbc.data",
+        "wdbc.names"
+      ],
+      "sha256": "bc154869ef13f753f9e2b5a17e248cfe1ba4b6721db7c4da9f4880e40b05d3af",
+      "title": "Breast Cancer Wisconsin (Diagnostic)",
+      "url": "https://archive.ics.uci.edu/static/public/17/breast+cancer+wisconsin+diagnostic.zip",
+      "year": 1993
+    }
+  }
+}

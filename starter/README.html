@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ML-Assignment-1 学生模板</title>
+<style>
+body { margin: 0; padding: 24px 16px; font-family: sans-serif; line-height: 1.75; color: #24303c; background: #f6f9fb; }
+main { max-width: 860px; margin: auto; }
+p, li, td, th, nav { overflow-wrap: anywhere; }
+a { color: #1f6f8b; }
+a:focus-visible, pre:focus-visible, .table-scroll:focus-visible { outline: 3px solid #1f6f8b; outline-offset: 3px; }
+pre, .table-scroll { max-width: 100%; overflow-x: auto; }
+pre { padding: 12px; box-sizing: border-box; background: #eaf0f4; }
+code { font-family: monospace; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px; border: 1px solid #ccd7df; text-align: left; }
+@media (max-width: 560px) { body { padding: 16px 12px; } h1 { font-size: 1.55em; } }
+</style>
+</head>
+<body>
+<main>
+<nav aria-label="文档阅读导航"><a href="../public/index.html">课程说明</a> · <a href="../README.html">学生 README</a> · <a href="../docs/student-guide.html">学生指南</a> · <a href="../docs/assignment-scoring-rules-20261010.html">完整评分规则</a> · <a href="README.html">模板说明</a> · <a href="AI_USAGE.html">AI 使用说明</a> · <a href="README.md">Markdown 原文</a></nav>
+<h1>ML-Assignment-1 学生模板</h1>
+<p>五项任务：Logistic Regression、Linear SVM、GBDT Regression、K-Means、Discrete HMM。每项25分，可任选四项；完成五项时取最高四项，作业100分，占课程总评35%。效果为主，正确性、鲁棒性和效率为辅；综合表现前10%为满分档，随机/无信息基线为基础档。评分概要见解压根目录 <code>docs/assignment-scoring-rules-20261010.md</code>；正式细则、提交与成绩开放及截止时刻以课程题面和公告为准。</p>
+<h2>开始</h2>
+<p>在同时包含 <code>starter/</code>、<code>student_tools/</code>、<code>docs/</code> 的解压根目录执行：</p>
+<pre tabindex="0"><code class="language-sh">python3 -B -m student_tools selftest --project starter --tasks lr,svm,kmeans,hmm --public-data data/public/validation
+python3 -B -m student_tools package --project starter --output submission.zip</code></pre>
+<p>Windows若使用<code>python</code>命令，将<code>python3</code>替换为<code>python</code>。需要Python3.10+与支持C++17的g++/clang++；本工具不自动安装编译器。官方评测使用GCC 12、C++17、<code>-std=c++17 -O2</code>，学生可用兼容编译器本地开发。</p>
+<p>空模板全部方法未实现，公开自测失败是预期结果。先完成算法、填写两份文档，再测试和打包。<strong>本机自测会执行你的C++代码，不是安全沙箱；只运行自己编写或已经审查的代码。</strong> 公开自测不产生正式课程成绩；打包成功不等于算法正确，本机结果不能作为可信成绩上传。</p>
+<h2>作业区域</h2>
+<ul><li><code>starter/include/assignment.hpp</code>：保留<code>assignment</code>命名空间、类名、public方法参数/返回类型。</li><li><code>starter/src/assignment.cpp</code>：填写算法实现。</li><li>可修改private成员，可在include/src中增加标准库辅助头文件和C++源码；GBDT不限定使用模板的树桩结构。</li><li><code>starter/tools/driver.cpp</code>为公开API适配层，学生不需要实现CLI，不随源码提交。</li><li>HMM要求Viterbi联合最优路径，不是逐位置后验最大状态。</li></ul>
+<h2>源码提交包</h2>
+<p>ZIP根目录必须包含四个文件：<code>README.md</code>、<code>AI_USAGE.md</code>、<code>include/assignment.hpp</code>、<code>src/assignment.cpp</code>。除此之外仅允许<code>include/</code>内的<code>.h/.hpp</code>与<code>src/</code>内的<code>.cpp</code>。不要在ZIP里再套一层<code>starter/</code>目录。打包器只收这两份根文档和允许的源码，不收tools、teacher/private、其他根文件。</p>
+<p>两份Markdown必须为非空UTF-8文本，不可只填空白。将本README替换为自己项目的结构、实现文件和编译说明；<code>AI_USAGE.md</code>按实际情况填写。未使用AI时明确写<code>No AI assistance used.</code>；不要把模板中的待填内容当最终声明。</p>
+<p>限额：64文件（含两份Markdown）、单文件1MiB、解压总量8MiB、ZIP 8MiB、每成员解压/压缩比最多200。只接受未加密的stored/deflate ZIP；拒绝空文件、符号链接、路径逃逸、重复/NFC+大小写冲突、Windows不安全路径、二进制/NUL和非UTF-8文本。已有ZIP不会覆盖。不要提交数据、答案、模型、可执行文件、凭证或第三方机器学习库。</p>
+<h2>README填写示例</h2>
+<p>下列内容须按自己的实现修改；模板不证明已经完成或验证算法。</p>
+<pre tabindex="0"><code class="language-text">项目结构：include/assignment.hpp定义公开接口；src/assignment.cpp实现算法。
+任务实现：LR：[填写文件和方法]；SVM：[填写]；GBDT：[填写]；KMeans：[填写]；HMM：[填写]。
+编译注意：C++17，仅依赖标准库；官方使用GCC 12和-O2。[填写自己的其他注意事项]
+本地验证：[填写实际执行的公开自测及结果；未通过项如实列出]</code></pre>
+<h2>提交身份与AI声明</h2>
+<p>使用工具前填写本人信息，示例值必须替换：</p>
+<pre tabindex="0"><code class="language-sh">export STUDENT_ID=&quot;你的学号&quot;
+export STUDENT_NAME=&quot;你的姓名&quot;
+export STUDENT_NICKNAME=&quot;你的昵称&quot;</code></pre>
+<p>学号按字符串处理，保留前导零；提交及结果按学号归属，配置检查不是本人认证。教师权限独立。AI辅助和自主完成均可提交，不直接加扣分；AI使用说明随ZIP提交，工具的<code>ai_assisted</code>/<code>independent</code>标签仍须逐提交按实际情况声明，文档不替代该标签。</p>
+<p>公开练习数据在解压根目录 <code>data/public/training/</code>：classification.json供LR/SVM共用，另有gbdt.json、kmeans.json、hmm.json；<code>data/public/validation/</code>含五任务公开诊断输入、答案及manifest。选择已实现任务自测，GBDT可加入 <code>--tasks</code> 列表；公开数据不随作业源码提交。</p>
+<p>完整使用说明见解压根目录 <code>docs/student-guide.md</code>。包内 <code>public/leaderboard.html</code> 可直接打开；file离线预览显示“暂无成绩”，不请求网络、不生成排名。真实提交、查询与成绩开放以课程公告为准，本机诊断不是课程成绩。</p>
+<nav aria-label="返回文档导航"><a href="../public/index.html">课程说明</a> · <a href="../README.html">学生 README</a> · <a href="../docs/student-guide.html">学生指南</a> · <a href="../docs/assignment-scoring-rules-20261010.html">完整评分规则</a> · <a href="README.html">模板说明</a> · <a href="AI_USAGE.html">AI 使用说明</a> · <a href="README.md">Markdown 原文</a></nav>
+</main>
+</body>
+</html>

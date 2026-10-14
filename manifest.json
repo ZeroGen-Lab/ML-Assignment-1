@@ -1,0 +1,235 @@
+{
+  "approved_https_links": [
+    "https://dasellmg.yuque.com/org-wiki-dasellmg-vsl5wg/ml2026/qckpnr5fvr269d83"
+  ],
+  "files": [
+    {
+      "bytes": 4803,
+      "name": "README.html",
+      "sha256": "92d57371280aa94ed8bff7f5bf182efc2fd1eaa6150b172ec313f5d5f509eea4"
+    },
+    {
+      "bytes": 2450,
+      "name": "README.md",
+      "sha256": "6fe7d357417afa75e0105e409b1b673a9ae3726c8b0956010562ed0d634a7527"
+    },
+    {
+      "bytes": 12595,
+      "name": "data/public/gbdt.stdin",
+      "sha256": "fca29035d7375793cd4315b73802f0f2f52116a8052683cb41f137ed4e36c258"
+    },
+    {
+      "bytes": 763,
+      "name": "data/public/gbdt.validation.json",
+      "sha256": "40eaf2cdf5da98a869f2e8b7d2bafc9321c0ee245b83d946a8a891ff97640a8c"
+    },
+    {
+      "bytes": 788,
+      "name": "data/public/hmm.stdin",
+      "sha256": "1bcab280b33b79d5ead825f1498a12f09aca7cea035aaa0080a1e6120d1c0216"
+    },
+    {
+      "bytes": 318,
+      "name": "data/public/hmm.validation.json",
+      "sha256": "0f70155d8699af24dea06251e419887e4459be69310c313a1ec7de8c0c0d94c7"
+    },
+    {
+      "bytes": 20561,
+      "name": "data/public/kmeans.stdin",
+      "sha256": "3bd394e21cb45adbd11b05689ca7b663d8425502303f7c3afdb567979c67df55"
+    },
+    {
+      "bytes": 598,
+      "name": "data/public/kmeans.validation.json",
+      "sha256": "7d8eb02177d5f030350c7079316ef53e41e14b215901f35410eeb028722a9043"
+    },
+    {
+      "bytes": 88713,
+      "name": "data/public/lr.stdin",
+      "sha256": "adb56609c39409acb24ca41387f9a6f761c8e54716977306d4fdcc7a9c241aff"
+    },
+    {
+      "bytes": 613,
+      "name": "data/public/lr.validation.json",
+      "sha256": "6d8080a0a3d8202ea2023e1645b5ced820c2f8764267d2d9f72732c59bcef79e"
+    },
+    {
+      "bytes": 1902,
+      "name": "data/public/manifest.json",
+      "sha256": "918351d38f9f61f95bc92d6abce5c4033ceffc4cb81f653062fe5eb89b9c76a3"
+    },
+    {
+      "bytes": 173210,
+      "name": "data/public/svm.stdin",
+      "sha256": "efe04774e1aa20bbc766ecc164a7b33b03029824e06a8068a0edc52f8151c83d"
+    },
+    {
+      "bytes": 734,
+      "name": "data/public/svm.validation.json",
+      "sha256": "cd94eaa4adbed2766e79044af01579c18f043a64618c5d247bf451dee61125f8"
+    },
+    {
+      "bytes": 1999,
+      "name": "data/public/training/DATA-SOURCES.md",
+      "sha256": "e5cc6f36a475724c270f8b3032e8e031b688091318bf521d0e69fea429d0b4e1"
+    },
+    {
+      "bytes": 102104,
+      "name": "data/public/training/gbdt-train.csv",
+      "sha256": "28d101ee54f52bee1ac6eb25dd2bfaf2d81a4f3b51159a0da727b298f24fa747"
+    },
+    {
+      "bytes": 11241,
+      "name": "data/public/training/hmm-train.csv",
+      "sha256": "9e827507d2a448a8967ccea66ee34c248208405fd6f1b2bb1489089c55be4039"
+    },
+    {
+      "bytes": 23054,
+      "name": "data/public/training/kmeans-train.csv",
+      "sha256": "f2aa6185b7aaed9aac5a7fe421db9ef410567e4013a3c1ebd30e2e52d358d450"
+    },
+    {
+      "bytes": 269958,
+      "name": "data/public/training/lr-train.csv",
+      "sha256": "8d377999ca2d77384f69baf5d1f36c5db16a0b217e7915492554a8134a78445d"
+    },
+    {
+      "bytes": 5849,
+      "name": "data/public/training/manifest.json",
+      "sha256": "82b0e95cb9f9bc4d16ec3b7d1af7de779741b3b6935786f1e79bbf68736f3c68"
+    },
+    {
+      "bytes": 1381529,
+      "name": "data/public/training/svm-train.csv",
+      "sha256": "d865e72706ea867c2cf56ac9c0d80584152ae56cc5cc031cbb28cbeef8f73e69"
+    },
+    {
+      "bytes": 7199,
+      "name": "docs/assignment-scoring-rules-20261010.html",
+      "sha256": "16af993c10cde3679ba1f3719ed6b6ed7d43045e18acd43b0e062f0514188fd2"
+    },
+    {
+      "bytes": 4887,
+      "name": "docs/assignment-scoring-rules-20261010.md",
+      "sha256": "6e6c68c584ece25cec0ba37d975cde0a90b07e916b9bc029307b6e0c82789411"
+    },
+    {
+      "bytes": 17380,
+      "name": "docs/student-guide.html",
+      "sha256": "42c7bf01c450f47ecd46be4a25fe87a6d62fe05fc70a849670013e964466f997"
+    },
+    {
+      "bytes": 13507,
+      "name": "docs/student-guide.md",
+      "sha256": "b4573bc096d9fc742b9b167f18ebe8bda44cfcf4905bc6485943858820923615"
+    },
+    {
+      "bytes": 1528,
+      "name": "index.html",
+      "sha256": "07aa6f4c28c69ea96fb56f470d1ea1ec1af02a93ae78552d7893214419fd5a36"
+    },
+    {
+      "bytes": 8939,
+      "name": "public/index.html",
+      "sha256": "c972797e7aca4ab88afd0e8b69b14e7b3d48415f9ffd08666ed3fa16fab735b9"
+    },
+    {
+      "bytes": 8579,
+      "name": "public/leaderboard.html",
+      "sha256": "5805cab11c729802701b73388a018006e740863fda3189abbc3064fdc294dddf"
+    },
+    {
+      "bytes": 148452,
+      "name": "public/leaderboard.js",
+      "sha256": "c4d627fded41918fac6b9c84248b823889974c548f0195b042e76533c1c52a15"
+    },
+    {
+      "bytes": 3127,
+      "name": "starter/AI_USAGE.html",
+      "sha256": "49686e5e3b4889adac2edd323241e9058d4f742ab023ddd58223322d9dc01751"
+    },
+    {
+      "bytes": 1187,
+      "name": "starter/AI_USAGE.md",
+      "sha256": "3cb436f3ea0202e29245717e24162508dca0938e35e665c2341da5ea9eca57ee"
+    },
+    {
+      "bytes": 7099,
+      "name": "starter/README.html",
+      "sha256": "d07b7e84400f839a5f3379056b67def7ec87129968bb3af756ee254ae60d3a60"
+    },
+    {
+      "bytes": 4672,
+      "name": "starter/README.md",
+      "sha256": "f71819c5a37d0319cf228f1d53d1c31232f79c591c5275f5d0d6787657e67ace"
+    },
+    {
+      "bytes": 1823,
+      "name": "starter/include/assignment.hpp",
+      "sha256": "2ea4bb99651fb569b2044c9c80634ba29a21b34241d3880b513c1dc61fa183f9"
+    },
+    {
+      "bytes": 1952,
+      "name": "starter/src/assignment.cpp",
+      "sha256": "0f06150aaa684908a3fcd68d64f577b28987bd7dfe6e5c26bdc8fa32174154ee"
+    },
+    {
+      "bytes": 5616,
+      "name": "starter/tools/driver.cpp",
+      "sha256": "2ba847013ee230a66c0a052ea5f1be7875c0176efd3303d14ac084ef6f1e9b52"
+    },
+    {
+      "bytes": 469,
+      "name": "student_tools/__init__.py",
+      "sha256": "6817c8900057a899c115b28b2d1b9c1788b08cb573c18c78fb4e7438a73c5ef3"
+    },
+    {
+      "bytes": 9410,
+      "name": "student_tools/__main__.py",
+      "sha256": "987870ba48016ae2f488b5401df645a13b380c68c5f6839492b0e5d7f2b578f4"
+    },
+    {
+      "bytes": 10435,
+      "name": "student_tools/client.py",
+      "sha256": "9fb95ce6cd85a9c90bc101567fa611f51b0880f89d768c236a8a9c6b114308ad"
+    },
+    {
+      "bytes": 4110,
+      "name": "student_tools/identity.py",
+      "sha256": "52fd2a954878f35d291f0cb9e67e43fabbee961a2ce5f6b86a19320e8d29e4ee"
+    },
+    {
+      "bytes": 18749,
+      "name": "student_tools/intents.py",
+      "sha256": "866afe72f47cb0b7f3b8a8dcee3a30dce7355a293484469d22145c24aee1a1b5"
+    },
+    {
+      "bytes": 12271,
+      "name": "student_tools/package.py",
+      "sha256": "cb0c0b97de2e1920873757adb9575c3ef3b08cc14333fabb67aa5eba8111f1c8"
+    },
+    {
+      "bytes": 36934,
+      "name": "student_tools/release.py",
+      "sha256": "8c3e54d267bbb09dee4cd1410bb448428f6e33e42108f92d7170d76a77bfd497"
+    },
+    {
+      "bytes": 1885,
+      "name": "student_tools/self_report.py",
+      "sha256": "0546c06f3c0323df3bfae44558108abcae5a603db2ea2c30dbb5f483de31e32c"
+    },
+    {
+      "bytes": 30029,
+      "name": "student_tools/selftest.py",
+      "sha256": "98aeb19a729148d3601e8877ab72ae823b3391faebd3faf85e4ea49abfe62fa2"
+    },
+    {
+      "bytes": 8973,
+      "name": "student_tools/transport.py",
+      "sha256": "f6a70bec8bc09e27c24772ca811870191065dd715e87aec63c1f8e5b5aae8cdd"
+    }
+  ],
+  "generated_at_utc": "2026-10-14T10:27:59.509873+00:00",
+  "policy": "fixed whitelist; teacher and private material excluded",
+  "release_version": "0.3.0"
+}
