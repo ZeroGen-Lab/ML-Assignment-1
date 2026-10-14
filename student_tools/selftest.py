@@ -216,7 +216,8 @@ def compile_project(compiler, project, workdir, timeout):
     include_flags = ['-I', str(include)]
     for extra in sorted(p for p in include.rglob('*') if p.is_dir()):
         include_flags += ['-I', str(extra)]
-    executable = Path(workdir) / 'selftest-driver'
+    executable_name = 'selftest-driver.exe' if platform.system() == 'Windows' else 'selftest-driver'
+    executable = Path(workdir) / executable_name
     command = [compiler, '-std=c++17', '-O2', '-Wall', '-Wextra', *include_flags,
                str(driver), *sources, '-o', str(executable)]
     try:
@@ -228,6 +229,8 @@ def compile_project(compiler, project, workdir, timeout):
     if done.returncode != 0:
         snippet = (done.stderr or done.stdout or '').strip()
         return None, 'compiler rejected the sources (first 1200 chars):\n' + snippet[:1200]
+    if not executable.is_file():
+        raise EnvironmentError_(f'compiler did not produce executable: {executable}')
     return executable, None
 
 
@@ -269,8 +272,11 @@ def run_binary(executable, payload, timeout, workdir):
         else:
             kwargs['start_new_session'] = True
         with open(out_path, 'wb') as out, open(err_path, 'wb') as err:
-            process = subprocess.Popen([str(executable)], stdin=subprocess.PIPE,
-                                       stdout=out, stderr=err, **kwargs)
+            try:
+                process = subprocess.Popen([str(executable)], stdin=subprocess.PIPE,
+                                           stdout=out, stderr=err, **kwargs)
+            except OSError as error:
+                raise EnvironmentError_(f'could not start executable: {error}') from error
             try:
                 process.communicate(payload.encode('utf-8'), timeout=timeout)
             except subprocess.TimeoutExpired:
@@ -400,9 +406,11 @@ def _public_json(raw):
 
 
 def _public_input_spec(task, payload, *, data_version='course-single-20261013-v1'):
-    if data_version not in ('course-single-20261013-v1', 'course-uci-20261014-v1'):
+    if data_version not in ('course-single-20261013-v1', 'course-uci-20261014-v1',
+                            'course-uci-20261014-v2', 'course-uci-20261014-v3'):
         raise ValueError('unknown public data version')
-    uci = data_version == 'course-uci-20261014-v1'
+    uci = data_version in ('course-uci-20261014-v1', 'course-uci-20261014-v2',
+                           'course-uci-20261014-v3')
     tokens = iter(payload.split())
     if next(tokens, None) != task:
         raise ValueError('input task mismatch')
@@ -428,9 +436,14 @@ def _public_input_spec(task, payload, *, data_version='course-single-20261013-v1
                               for _ in range(20)])
         spec = {'states': 3, 'observations': sequences[16:]}
     else:
-        dimension = ({'lr': 30, 'svm': 57, 'gbdt': 4, 'kmeans': 7} if uci else
+        dimension = ({'lr': 57, 'svm': 57, 'gbdt': 4, 'kmeans': 7}
+                     if data_version == 'course-uci-20261014-v3' else
+                     {'lr': 30, 'svm': 57, 'gbdt': 4, 'kmeans': 7} if uci else
                      {'lr': 8, 'svm': 8, 'gbdt': 6, 'kmeans': 4})[task]
-        train_count, test_count, clusters = (120, 30, 3) if uci else (160, 40, 4)
+        train_count, test_count, clusters = ((110, 28, 3)
+            if data_version == 'course-uci-20261014-v2' and task == 'kmeans' else
+            (160, 40, 2) if data_version == 'course-uci-20261014-v3' else
+            (120, 30, 3) if uci else (160, 40, 4))
         integer(train_count); integer(dimension); integer(test_count)
         if task == 'kmeans':
             integer(clusters)
@@ -473,14 +486,22 @@ def load_public_validation(directory, task):
                          and manifest['status'] == 'PUBLIC_VALIDATION_CANDIDATE_NOT_PUBLISHED')
                         or (set(manifest) == public_keys
                             and manifest['schema'] == 'course-public-validation-v1'))
-                or manifest['data_version'] not in ('course-single-20261013-v1', 'course-uci-20261014-v1')
+                or manifest['data_version'] not in ('course-single-20261013-v1', 'course-uci-20261014-v1',
+                                                    'course-uci-20261014-v2', 'course-uci-20261014-v3')
                 or not isinstance(manifest['dataset_id'], str)
                 or not re.fullmatch('[0-9a-f]{64}', manifest['dataset_id'])
                 or not isinstance(manifest['files'], list) or len(manifest['files']) != 10):
             raise ValueError('invalid public manifest')
-        uci = manifest['data_version'] == 'course-uci-20261014-v1'
-        if uci and (set(manifest) != public_keys or manifest['dataset_id'] !=
-                    'db695906b8e038e25f82cec2e4eaa7e5224eaa8121eab0b7f569184a14457529'):
+        uci = manifest['data_version'] in ('course-uci-20261014-v1', 'course-uci-20261014-v2',
+                                           'course-uci-20261014-v3')
+        if uci and (set(manifest) != public_keys or manifest['dataset_id'] != {
+                'course-uci-20261014-v1':
+                    'db695906b8e038e25f82cec2e4eaa7e5224eaa8121eab0b7f569184a14457529',
+                'course-uci-20261014-v2':
+                    '06354e99114e0c800cab1141c4c34facf54b0710758a51b47958f68dcfecb4b2',
+                'course-uci-20261014-v3':
+                    '0f23098f6a76cf60424ca04bc1bfe1d7e96ad1ef1a59a632dd2b319ab162c671',
+                }[manifest['data_version']]):
             raise ValueError('invalid UCI public identity or schema')
         expected = {t + suffix: t for t in TASKS for suffix in ('.stdin', '.validation.json')}
         files = {}
@@ -509,13 +530,20 @@ def load_public_validation(directory, task):
                 or any(metadata[key] != manifest[key] for key in ('data_version', 'dataset_id'))):
             raise ValueError('invalid validation metadata')
         ids = metadata['validation_ids']
-        count = 2 if task == 'hmm' else (30 if uci else 40)
+        count = 2 if task == 'hmm' else (
+            28 if manifest['data_version'] == 'course-uci-20261014-v2' and task == 'kmeans'
+            else 40 if manifest['data_version'] == 'course-uci-20261014-v3'
+            else 30 if uci else 40)
         family = 'classification' if task in ('lr', 'svm') else task
         upper_id = 90 if task == 'hmm' else 1800
         if uci:
-            family, upper_id = {'lr': ('wdbc', 569), 'svm': ('spambase', 4204),
-                                'gbdt': ('ccpp', 9527), 'kmeans': ('seeds', 210),
-                                'hmm': ('hmm', 90)}[task]
+            family, upper_id = ({'lr': ('spambase', 4204), 'svm': ('spambase', 4204),
+                                 'gbdt': ('ccpp', 9527), 'kmeans': ('rice', 3810),
+                                 'hmm': ('hmm', 90)}
+                                if manifest['data_version'] == 'course-uci-20261014-v3' else
+                                {'lr': ('wdbc', 569), 'svm': ('spambase', 4204),
+                                 'gbdt': ('ccpp', 9527), 'kmeans': ('seeds', 210),
+                                 'hmm': ('hmm', 90)})[task]
         if (not isinstance(ids, list) or len(ids) != count
                 or any(not isinstance(value, str) or not re.fullmatch(family + r':(0|[1-9][0-9]*)', value)
                        or int(value.split(':')[1]) >= upper_id for value in ids)
@@ -632,8 +660,12 @@ def main(argv=None):
         failures = 0
         for task in selected_tasks:
             started = time.monotonic()
-            category, detail = (run_task(executable, task, args.timeout, workdir, public[task])
-                                if public is not None else run_task(executable, task, args.timeout, workdir))
+            try:
+                category, detail = (run_task(executable, task, args.timeout, workdir, public[task])
+                                    if public is not None else run_task(executable, task, args.timeout, workdir))
+            except EnvironmentError_ as error:
+                print(f'selftest: environment error: {error}', file=sys.stderr)
+                return 3
             elapsed = time.monotonic() - started
             status = 'ok' if category == 'ok' else f'FAIL {category}'
             line = f'task {task:<7}: {status:<22} ({elapsed:5.1f}s)'

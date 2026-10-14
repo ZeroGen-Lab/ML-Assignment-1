@@ -1,6 +1,6 @@
 # ML Assignment 1 · C++17 算法实践
 
-[下载 v0.3.0 学生包](https://github.com/ZeroGen-Lab/ML-Assignment-1/releases/tag/v0.3.0) · [评测与评分](#评测指标与评分方式) · [排行榜说明](#排行榜) · [学生指南](docs/student-guide.md)
+[下载配套 v0.3.1 学生包（v3；发行后可用）](https://github.com/ZeroGen-Lab/ML-Assignment-1/releases/tag/v0.3.1) · [评测与评分](#评测指标与评分方式) · [排行榜说明](#排行榜) · [学生指南](docs/student-guide.md)
 
 > **截止时间**：正式课程发布后 **3 周**，具体 Asia/Shanghai 时刻以课程公告为准。排行榜访问地址尚未公布，不向猜测地址发送身份或源码。
 >
@@ -12,13 +12,13 @@
 
 |任务|学习与实现重点|数据来源|特征 / 结构|正式训练 / 测试|
 |---|---|---|---|---|
-|Logistic Regression|二分类概率建模、损失与优化|WDBC|30 维，0/1 分类|454 / 115 条|
-|Linear SVM|线性分类、间隔与正则化|Spambase|57 维，0/1 分类|1194 / 606 条|
+|Logistic Regression|二分类概率建模、损失与优化|Spambase，与SVM共源共划分|57 维，0/1 分类|1194 / 606 条|
+|Linear SVM|线性分类、间隔与正则化|Spambase，与LR共源共划分|57 维，0/1 分类|1194 / 606 条|
 |GBDT Regression|树模型与逐轮残差拟合|CCPP|4 维，实数回归|1199 / 601 条|
-|K-Means|聚类分配与中心更新|Seeds|7 维，K=3，无公开类别标签|168 / 42 条|
+|K-Means|聚类分配与中心更新|Rice Cammeo/Osmancik|7 维，K=2，无公开类别标签|1199 / 601 条|
 |Discrete HMM|监督参数估计、Viterbi 路径解码|监督序列|3 状态、4 观测符号，每条 20 步|60 / 30 条完整序列|
 
-数据版本：`course-uci-20261014-v1`。公开训练数据位于学生包的 `data/public/training/`；正式测试部分由教师留出，不随学生包发布。前四项连续特征已按正式训练集统计量做 z-score，**无需再次标准化**。
+本表为新版数据 `course-uci-20261014-v3`，数据身份 `0f23098f6a76cf60424ca04bc1bfe1d7e96ad1ef1a59a632dd2b319ab162c671`；配套 v0.3.1 尚未发行，已发布 v0.3.0 仍使用 v1，不能混用。学生公开训练 CSV 位于 `data/public/training/`：前四项各200条，是正式训练集的代表性子集，不是全部正式训练数据；LR/SVM共享同一Spambase来源、正式划分、标准化及公开200条，仅实现算法不同。HMM公开10条完整序列，每条20步，共200行；正式训练/测试仍60/30条完整序列。服务器实际正式训练/测试为LR/SVM1194/606条、GBDT和Rice各1199/601条，不用公开200替代正式fit；正式测试与真值不随学生包发布。连续特征复用正式训练集统计量做 z-score，公开子集不重新计算尺度，**无需再次标准化**。
 
 建议流程：在公开训练部分自划训练 / 验证集，调试实现、检查质量，再使用完整公开训练部分训练。HMM 必须按**完整序列**划分，不能将同一条序列的不同位置拆入两组。公开诊断只检查接口、格式与示例行为，不能替代自己的验证集或正式留出评测。
 
@@ -30,13 +30,13 @@
 
 |训练文件（学生包 `data/public/training/`）|输入与目标|
 |---|---|
-|`lr-train.csv`|`f0`…`f29`，目标 `y` 为 0/1|
+|`lr-train.csv`|`f0`…`f56`，目标 `y` 为 0/1；与SVM同一公开子集|
 |`svm-train.csv`|`f0`…`f56`，目标 `y` 为 0/1|
 |`gbdt-train.csv`|`f0`…`f3`，目标 `y` 为实数|
-|`kmeans-train.csv`|`f0`…`f6`，没有类别标签列；K=3|
+|`kmeans-train.csv`|`f0`…`f6`，没有类别标签列；K=2|
 |`hmm-train.csv`|`sequence_id,step,observation,state_label`；每序列 20 步|
 
-公开诊断位于 `data/public/`，包含输入、诊断答案与 `manifest.json`：前四项各 120 条 fit / 30 条 predict，HMM 为 8 条 fit / 2 条 predict 完整序列。KMeans 诊断没有类别真值；不要将诊断数据或答案装入源码提交 ZIP。
+新版配套公开诊断位于 `data/public/`，包含输入、诊断答案与 `manifest.json`。诊断从同版公开训练子集中划分，不是正式留出测试；LR、SVM、GBDT、KMeans各160条fit/40条predict，HMM为8条完整fit序列/2条完整predict序列；具体内容与身份见包内同版manifest。HMM必须按整条序列划分。当前新版尚未发行；KMeans诊断不公开类别真值，不要将诊断数据或答案装入源码提交ZIP。
 
 ## 评测指标与评分方式
 
@@ -118,7 +118,7 @@ public/                # 静态排行榜页面
 
 ## 运行与提交
 
-下载 Release 中的 `student-release-0.3.0.zip`，解压后在包根执行。示例本人信息须替换；变量只在当前终端有效，学号按字符串保留前导零，自报信息不是认证。
+本节命令在配套学生包根执行。当前 Release 中的 `student-release-0.3.0.zip` 对应旧版 v1，不对应上表 v3；新版配套学生包尚未发行，发布后请按新版发行说明下载，不混用数据与工具。示例本人信息须替换；变量只在当前终端有效，学号按字符串保留前导零，自报信息不是认证。
 
 <details>
 <summary><strong>macOS / Linux · Bash</strong></summary>

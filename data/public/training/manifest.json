@@ -21,19 +21,19 @@
     },
     "kmeans": {
       "dimensions": 7,
-      "k": 3,
+      "k": 2,
       "sequence_length": null,
-      "task_dataset_id": "b9240e587b99868a9f92be3de4445ac4c2a11d4d2c39109e0654e2419cb2c94b",
-      "test_rows": 42,
-      "train_rows": 168
+      "task_dataset_id": "6174524f266147c4ac1757292e2204b7a4498a0b4d5673142ddc868f3ed4ac94",
+      "test_rows": 601,
+      "train_rows": 1199
     },
     "lr": {
-      "dimensions": 30,
+      "dimensions": 57,
       "k": null,
       "sequence_length": null,
-      "task_dataset_id": "f98cfbbc9ff794f0c84db3debc33498c3f6d077a993d1ba0e70b196f97231d37",
-      "test_rows": 115,
-      "train_rows": 454
+      "task_dataset_id": "57230c0c5b27e38368a1a4b0b44bf3fbbb92883576a57d7795610d3ac90b5411",
+      "test_rows": 606,
+      "train_rows": 1194
     },
     "svm": {
       "dimensions": 57,
@@ -44,37 +44,60 @@
       "train_rows": 1194
     }
   },
-  "data_version": "course-uci-20261014-v1",
-  "dataset_id": "db695906b8e038e25f82cec2e4eaa7e5224eaa8121eab0b7f569184a14457529",
+  "data_version": "course-uci-20261014-v3",
+  "dataset_id": "0f23098f6a76cf60424ca04bc1bfe1d7e96ad1ef1a59a632dd2b319ab162c671",
   "files": {
     "gbdt-train.csv": {
-      "bytes": 102104,
-      "sha256": "28d101ee54f52bee1ac6eb25dd2bfaf2d81a4f3b51159a0da727b298f24fa747"
+      "bytes": 17045,
+      "sha256": "81d724787f0b73bdf330bb038a8c80374559516909a74379c3263a02b2395681"
     },
     "hmm-train.csv": {
-      "bytes": 11241,
-      "sha256": "9e827507d2a448a8967ccea66ee34c248208405fd6f1b2bb1489089c55be4039"
+      "bytes": 1741,
+      "sha256": "ad4676530d835b7ed3eb414570d9bf8c907bd2c1cdb9efa041b8f0fc93ff98a2"
     },
     "kmeans-train.csv": {
-      "bytes": 23054,
-      "sha256": "f2aa6185b7aaed9aac5a7fe421db9ef410567e4013a3c1ebd30e2e52d358d450"
+      "bytes": 27495,
+      "sha256": "849555fd52e4d90009f5d1865d33028e3388c8308811c46b05e67e379f9e39ee"
     },
     "lr-train.csv": {
-      "bytes": 269958,
-      "sha256": "8d377999ca2d77384f69baf5d1f36c5db16a0b217e7915492554a8134a78445d"
+      "bytes": 231518,
+      "sha256": "bb95e929bfe25552929945f2c85e47637458019f008a522e98844680376c7723"
     },
     "svm-train.csv": {
-      "bytes": 1381529,
-      "sha256": "d865e72706ea867c2cf56ac9c0d80584152ae56cc5cc031cbb28cbeef8f73e69"
+      "bytes": 231518,
+      "sha256": "bb95e929bfe25552929945f2c85e47637458019f008a522e98844680376c7723"
     }
   },
   "formal_ready": false,
-  "hmm": "60 intact sequences x 20; supervised states 0..2",
+  "hmm": "10 public intact sequences x 20; formal train/test 60/30; states 0..2",
   "holdout_policy": "not-course-published; original public labels may be recoverable",
   "kmeans_class_labels_published": false,
-  "kmeans_k": 3,
+  "kmeans_k": 2,
   "preprocessing": "already-train-standardized-do-not-scale-again",
   "production_ready": false,
+  "public_counts": {
+    "gbdt": {
+      "rows": 200,
+      "sequences": null
+    },
+    "hmm": {
+      "rows": 200,
+      "sequences": 10
+    },
+    "kmeans": {
+      "rows": 200,
+      "sequences": null
+    },
+    "lr": {
+      "rows": 200,
+      "sequences": null
+    },
+    "svm": {
+      "rows": 200,
+      "sequences": null
+    }
+  },
+  "public_subset_policy": "fixed-representative-formal-train-only",
   "published": false,
   "schema": "course-uci-training-csv-v1",
   "sources": {
@@ -101,29 +124,31 @@
       "url": "https://archive.ics.uci.edu/static/public/294/combined+cycle+power+plant.zip",
       "year": 2014
     },
-    "seeds": {
-      "authors": [
-        "Charytanowicz, M.",
-        "Niewczas, J.",
-        "Kulczycki, P.",
-        "Kowalski, P.",
-        "Lukasik, S."
+    "rice": {
+      "archive_sha256": "fe94e42046b829de21b92b0ffb6a22774fde021328cae799faa802a14e8dbed9",
+      "citation": "Cinar and Koklu (2019), DOI 10.18201/ijisae.2019355381; UCI DOI 10.24432/C5MW4Z",
+      "class_mapping": {
+        "Cammeo": 0,
+        "Osmancik": 1
+      },
+      "clean_csv_rows": 3810,
+      "clean_csv_sha256": "fafbb031ad5ecdde04f7b1d722173634f0515c31031fc4edad8e7e737c6c571a",
+      "cleaning": "drop conflicting feature groups and exact duplicates; preserve source order",
+      "conflicting_feature_groups": 0,
+      "download_url": "https://archive.ics.uci.edu/static/public/545/rice%2Bcammeo%2Band%2Bosmancik.zip",
+      "exact_duplicates_removed": 0,
+      "feature_names": [
+        "Area",
+        "Perimeter",
+        "Major_Axis_Length",
+        "Minor_Axis_Length",
+        "Eccentricity",
+        "Convex_Area",
+        "Extent"
       ],
-      "ccpp_sheet": null,
-      "clean_csv_rows": 210,
-      "clean_csv_sha256": "97cb65520038418d4c3f82a36e5f19c20264c4cf610954a43967c13671cf48a4",
-      "cleaning": "existing-conflict-and-exact-dedup",
-      "doi": "10.24432/C5H30K",
-      "download_date": "2026-10-07",
-      "landing": "https://archive.ics.uci.edu/dataset/236/seeds",
-      "license": "CC BY 4.0",
-      "members": [
-        "seeds_dataset.txt"
-      ],
-      "sha256": "5033bd71b24592fa70d9b3cc5be02332dc6d03d0b27e6655e6d553f39afab323",
-      "title": "Seeds",
-      "url": "https://archive.ics.uci.edu/static/public/236/seeds.zip",
-      "year": 2010
+      "license": "Creative Commons Attribution 4.0 International",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://archive.ics.uci.edu/dataset/545/rice+cammeo+and+osmancik"
     },
     "spambase": {
       "authors": [
@@ -149,30 +174,6 @@
       "title": "Spambase",
       "url": "https://archive.ics.uci.edu/static/public/94/spambase.zip",
       "year": 1999
-    },
-    "wdbc": {
-      "authors": [
-        "Wolberg, W.",
-        "Mangasarian, O.",
-        "Street, W.",
-        "Street, N."
-      ],
-      "ccpp_sheet": null,
-      "clean_csv_rows": 569,
-      "clean_csv_sha256": "cea4de03dbd7ba00f45fcb7e95ced5e922795afb3be2671b404240868d6a5c0d",
-      "cleaning": "existing-conflict-and-exact-dedup",
-      "doi": "10.24432/C5DW2B",
-      "download_date": "2026-10-07",
-      "landing": "https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic",
-      "license": "CC BY 4.0",
-      "members": [
-        "wdbc.data",
-        "wdbc.names"
-      ],
-      "sha256": "bc154869ef13f753f9e2b5a17e248cfe1ba4b6721db7c4da9f4880e40b05d3af",
-      "title": "Breast Cancer Wisconsin (Diagnostic)",
-      "url": "https://archive.ics.uci.edu/static/public/17/breast+cancer+wisconsin+diagnostic.zip",
-      "year": 1993
     }
   }
 }

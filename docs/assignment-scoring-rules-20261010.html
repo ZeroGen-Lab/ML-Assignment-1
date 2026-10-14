@@ -28,9 +28,9 @@ th, td { padding: 8px; border: 1px solid #ccd7df; text-align: left; }
 <h2>2. 官方环境与提交规范</h2>
 <ul><li>官方评测使用GCC 12、C++17、<code>-std=c++17 -O2</code>，仅依赖C++标准库。学生可用兼容编译器本地开发。</li><li>保持<code>assignment</code>命名空间及公开类名、方法签名不变；可以修改private成员并增加辅助源码。</li><li>ZIP根目录必须包含<code>README.md</code>、<code>AI_USAGE.md</code>、<code>include/assignment.hpp</code>、<code>src/assignment.cpp</code>。除此之外仅允许<code>include/</code>内的<code>.h/.hpp</code>和<code>src/</code>内的<code>.cpp</code>，不允许嵌套一层项目根目录。</li><li>两份Markdown均为非空UTF-8文本。README简述结构、任务实现文件和编译注意事项；AI_USAGE简述工具、用途和本人验证，未使用AI时写<code>No AI assistance used.</code>。</li><li>最多64个文件（包含两份Markdown）；每文件最多1,048,576字节，解压总量最多8,388,608字节，ZIP最多8,388,608字节，每成员解压/压缩比最多200（压缩大小为0而内容非空时拒绝）。只接受未加密的stored/deflate ZIP。</li><li>禁止空文件、NUL、非UTF-8、符号链接、绝对路径、反斜杠、<code>.</code>/<code>..</code>路径段、重复或NFC+casefold后冲突的路径、Windows设备名、冒号及路径分量尾部点/空格。不得夹带teacher/private、凭证、数据、答案、模型、可执行文件或其他二进制。</li><li>请填写本人学号、姓名和昵称；设置<code>export STUDENT_ID=...</code>、<code>export STUDENT_NAME=&quot;...&quot;</code>、<code>export STUDENT_NICKNAME=&quot;...&quot;</code>。学号按字符串处理，保留前导零；提交及结果按学号归属。配置检查不是本人认证，教师权限独立。</li></ul>
 <h2>3. 公开练习与本机诊断</h2>
-<p>完整学生包内的<code>data/public/training/</code>包含classification.json（LR/SVM共用）、gbdt.json、kmeans.json、hmm.json；<code>data/public/validation/</code>包含五任务各自的公开输入、答案和manifest。公开数据不是隐藏正式测试，不能加入作业提交ZIP。</p>
+<p>完整学生包内的 <code>data/public/training/</code> 包含五份训练CSV：<code>lr-train.csv</code>（LR，WDBC，30维）、<code>svm-train.csv</code>（SVM，Spambase，57维）、<code>gbdt-train.csv</code>（GBDT，CCPP，4维）、<code>kmeans-train.csv</code>（KMeans，Seeds，7维，K=3，无公开类别标签）、<code>hmm-train.csv</code>（监督HMM，3状态、4观测符号，每条20步）。<code>data/public/</code> 包含五任务各自的公开诊断输入、诊断答案和 <code>manifest.json</code>；KMeans诊断无类别真值。来源与许可见解压根目录 <code>data/public/training/DATA-SOURCES.md</code>。公开数据不是隐藏正式测试，不能加入作业提交ZIP。</p>
 <p>在解压根目录选择已实现任务诊断，例如：</p>
-<pre tabindex="0"><code class="language-sh">python3 -B -m student_tools selftest --project starter --tasks lr,svm,kmeans,hmm --public-data data/public/validation
+<pre tabindex="0"><code class="language-sh">python3 -B -m student_tools selftest --project starter --tasks lr,svm,kmeans,hmm --public-data data/public
 python3 -B -m student_tools package --project starter --output submission.zip</code></pre>
 <p>GBDT可加入任务列表。空模板未实现时失败是预期结果，不要硬编码公开答案。<strong>本机自测会编译并执行C++，不是安全沙箱；只运行自己编写或已审查的代码。</strong></p>
 <h2>4. 提交、时间与榜单</h2>

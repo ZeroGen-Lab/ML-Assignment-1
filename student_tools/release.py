@@ -21,8 +21,8 @@ Whitelist (relative to the repository root, nothing else is ever copied):
     explicit student README -> README.md (never the repository root README)
     starter/README.md                student template instructions
     starter/AI_USAGE.md              student-authored AI declaration template
-    student_tools/{__init__,__main__,client,identity,intents,package,release,
-                   self_report,selftest,transport}.py
+    student_tools/{__init__,__main__,client,identity,intents,intents_windows,
+                   package,release,self_report,selftest,transport}.py
     docs/student-guide.md            the student guide
     docs/assignment-scoring-rules-20261010.md
                                       the public scoring rules (exact file,
@@ -30,7 +30,7 @@ Whitelist (relative to the repository root, nothing else is ever copied):
 
 A ``manifest.json`` records the release version and a sha256 for every
 file. Teacher material (teacher/, non-public data, private_data/, keys,
-models, course tooling beyond the ten student_tools modules) is excluded
+models, course tooling beyond the eleven student_tools modules) is excluded
 by construction. Public data uses fixed member names, never a directory
 walk; copying the whole repository is not possible here. Output
 files are created exclusively and never overwritten.
@@ -57,13 +57,32 @@ from urllib.parse import unquote, urlsplit, urlunsplit
 
 from student_tools.package import PackageError
 
-RELEASE_VERSION = '0.3.0'
+RELEASE_VERSION = '0.3.1'
 PUBLIC_DATA_VERSION = 'course-uci-20261014-v1'
 LEGACY_PUBLIC_DATA_VERSION = 'course-single-20261013-v1'
 PUBLIC_FILE_LIMIT = 262144
 PUBLIC_CSV_FILE_LIMIT = 2 * 1024 * 1024
 PUBLIC_TOTAL_LIMIT = 16 * PUBLIC_FILE_LIMIT
 PUBLIC_CSV_MANIFEST_SHA256 = '82b0e95cb9f9bc4d16ec3b7d1af7de779741b3b6935786f1e79bbf68736f3c68'
+PUBLIC_CSV_IDENTITIES = {
+    PUBLIC_DATA_VERSION: (
+        PUBLIC_CSV_MANIFEST_SHA256,
+        'e5cc6f36a475724c270f8b3032e8e031b688091318bf521d0e69fea429d0b4e1'),
+    'course-uci-20261014-v2': (
+        '3083588dab34ea65fe258775c7e9a32ffd74dcae44cc0415f253bc60f7c6f3d2',
+        '2d7c97b5526897e28cfeb5764307040212611bb84034e01e3338cb1a73878de0'),
+    'course-uci-20261014-v3': (
+        '97f69d98c8ef6fe0dd10073c4e2dcb2226b12ebbcef54e292909d2184605b483',
+        '05eda33c22b9889779998c6211b18cb347ab820d84b8e881504dd0f970db1408'),
+}
+PUBLIC_CSV_LICENSE_BYTES = {
+    PUBLIC_DATA_VERSION: 1999, 'course-uci-20261014-v2': 1999,
+    'course-uci-20261014-v3': 2046,
+}
+PUBLIC_VALIDATION_IDENTITIES = {
+    PUBLIC_DATA_VERSION: 'd4b01f6df571942d89aea5c6f0fb7129c6852440d3a1dc6709b178ab741d92e0',
+    'course-uci-20261014-v3': 'cfb8d8998f74ac804ad56fe5d51c59db02ece8c19016c9db73e6c24e7c023365',
+}
 PUBLIC_CSV_TASKS = {task + '-train.csv': task for task in ('lr', 'svm', 'gbdt', 'kmeans', 'hmm')}
 PUBLIC_TRAINING_TASKS = {
     'classification.json': ['lr', 'svm'], 'gbdt.json': ['gbdt'],
@@ -75,7 +94,7 @@ PUBLIC_VALIDATION_TASKS = {
 }
 ZIP_TIMESTAMP = (2026, 1, 1, 0, 0, 0)
 STUDENT_TOOL_MODULES = ('__init__.py', '__main__.py', 'client.py', 'identity.py',
-                        'intents.py', 'package.py', 'release.py', 'self_report.py',
+                        'intents.py', 'intents_windows.py', 'package.py', 'release.py', 'self_report.py',
                         'selftest.py', 'transport.py')
 OPTIONAL_FILES = ()
 MAPPED_FILES = (('public/entry.html', 'index.html'),)
@@ -187,6 +206,10 @@ def _collect(root, student_readme=None):
             take(name, path)
         elif name in REQUIRED_FILES:
             raise PackageError(f'whitelist entry missing: {name}')
+    if ((root / 'docs/dataset-columns.md').exists() or
+            (root / 'docs/dataset-columns.md').is_symlink()):
+        _reject_symlink_components(root, 'docs/dataset-columns.md')
+        take('docs/dataset-columns.md', root / 'docs/dataset-columns.md')
     _reject_symlink_components(root, 'student_tools')
     tools = root / 'student_tools'
     for module in STUDENT_TOOL_MODULES:
@@ -483,10 +506,10 @@ def _public_json(data):
 
 
 def _public_csv_source(folder, manifest_bytes, manifest):
-    if hashlib.sha256(manifest_bytes).hexdigest() != PUBLIC_CSV_MANIFEST_SHA256:
+    identity = PUBLIC_CSV_IDENTITIES.get(manifest.get('data_version'))
+    if identity is None or hashlib.sha256(manifest_bytes).hexdigest() != identity[0]:
         raise PackageError('unreviewed public CSV manifest')
     if (manifest.get('schema') != 'course-uci-training-csv-v1' or
-            manifest.get('data_version') != PUBLIC_DATA_VERSION or
             set(manifest.get('files', {})) != set(PUBLIC_CSV_TASKS)):
         raise PackageError('invalid public CSV manifest')
     content = {'manifest.json': manifest_bytes}
@@ -499,8 +522,8 @@ def _public_csv_source(folder, manifest_bytes, manifest):
             raise PackageError(f'public member identity mismatch: {name}')
         content[name] = data
     license_data = _public_bytes(folder / 'DATA-SOURCES.md')
-    if (len(license_data) != 1999 or hashlib.sha256(license_data).hexdigest() !=
-            'e5cc6f36a475724c270f8b3032e8e031b688091318bf521d0e69fea429d0b4e1'):
+    if (len(license_data) != PUBLIC_CSV_LICENSE_BYTES[manifest['data_version']] or
+            hashlib.sha256(license_data).hexdigest() != identity[1]):
         raise PackageError('public source license identity mismatch')
     content['DATA-SOURCES.md'] = license_data
     return manifest, content
@@ -513,17 +536,20 @@ def _public_source(folder, training):
     _reject_symlink_components(Path(folder.anchor), folder.relative_to(folder.anchor))
     manifest_bytes = _public_bytes(folder / 'manifest.json')
     manifest = _public_json(manifest_bytes)
-    if training and manifest.get('data_version') == PUBLIC_DATA_VERSION:
+    if training and manifest.get('data_version') in PUBLIC_CSV_IDENTITIES:
         return _public_csv_source(folder, manifest_bytes, manifest)
-    uci_validation = not training and manifest.get('data_version') == PUBLIC_DATA_VERSION
-    if uci_validation and hashlib.sha256(manifest_bytes).hexdigest() != 'd4b01f6df571942d89aea5c6f0fb7129c6852440d3a1dc6709b178ab741d92e0':
+    uci_validation = (not training and
+                      manifest.get('data_version') in PUBLIC_VALIDATION_IDENTITIES)
+    if (uci_validation and hashlib.sha256(manifest_bytes).hexdigest() !=
+            PUBLIC_VALIDATION_IDENTITIES[manifest['data_version']]):
         raise PackageError('unreviewed public UCI validation manifest')
     keys = ({'schema_version', 'data_version', 'dataset_id', 'status', 'files'} if training else
             ({'schema', 'data_version', 'dataset_id', 'files'} if uci_validation else
              {'status', 'data_version', 'dataset_id', 'files', 'input_manifest',
               'input_manifest_sha256', 'driver_executed', 'student_executed', 'gates'}))
     version = manifest.get('data_version')
-    versions = (LEGACY_PUBLIC_DATA_VERSION,) if training else (LEGACY_PUBLIC_DATA_VERSION, PUBLIC_DATA_VERSION)
+    versions = ((LEGACY_PUBLIC_DATA_VERSION,) if training else
+                (LEGACY_PUBLIC_DATA_VERSION, *PUBLIC_VALIDATION_IDENTITIES))
     expected = PUBLIC_TRAINING_TASKS if training else PUBLIC_VALIDATION_TASKS
     expected_status = ('PUBLIC_TRAINING_CANDIDATE' if training else
                        'PUBLIC_VALIDATION_CANDIDATE_NOT_PUBLISHED')
@@ -613,11 +639,11 @@ def _public_delivery(root, public_training_dir, public_validation_dir, leaderboa
         'dataset_id': validation_manifest['dataset_id'], 'files': validation_manifest['files'],
     }
     content = {'data/public/training/' + name: data for name, data in training.items()}
-    validation_prefix = ('data/public/' if training_manifest['data_version'] == PUBLIC_DATA_VERSION
-                         else 'data/public/validation/')
+    validation_prefix = ('data/public/' if training_manifest['data_version'] in
+                         PUBLIC_VALIDATION_IDENTITIES else 'data/public/validation/')
     content.update({validation_prefix + name: data for name, data in validation.items()})
     content[validation_prefix + 'manifest.json'] = (json.dumps(public_manifest, indent=2) + '\n').encode()
-    new_version = training_manifest['data_version'] == PUBLIC_DATA_VERSION
+    new_version = training_manifest['data_version'] in PUBLIC_VALIDATION_IDENTITIES
     if new_version and leaderboard_dir is None:
         raise PackageError('explicit reviewed leaderboard_dir is required for UCI release')
     asset_root = Path(leaderboard_dir) if leaderboard_dir is not None else Path(root) / 'public'

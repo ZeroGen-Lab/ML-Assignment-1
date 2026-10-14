@@ -11,7 +11,7 @@
 | Logistic Regression | fit / predict | 二分类标签0/1，长度及顺序与输入一致 |
 | Linear SVM | fit / predict | 二分类标签0/1，长度及顺序与输入一致 |
 | GBDT Regression | fit / predict | 有限实数预测，不能含NaN/Infinity |
-| K-Means | fit / predict | 先训练同一对象，再预测[0,K)簇编号；本课程Seeds任务K=3；不是在predict中重新训练 |
+| K-Means | fit / predict | 先训练同一对象，再预测[0,K)簇编号；本课程Rice任务K=2；不是在predict中重新训练 |
 | Discrete HMM | fit / predict | 使用观测及状态标签监督训练；预测Viterbi联合最优路径 |
 
 HMM精确平局取最小前驱、最小末状态；空观测和无可行路径返回该序列的空路径。空预测矩阵返回空结果；K>N和空簇须正常结束并返回合法编号。正常训练输入为非空、有限、等维度数据。不要硬编码公开样例答案，隐藏测试使用不同数据。
@@ -22,23 +22,23 @@ HMM精确平局取最小前驱、最小末状态；空观测和无可行路径�
 
 下载课程公告提供的完整学生包，或下载学生仓库源码 ZIP 后解压。保留 `starter/`、`student_tools/`、`docs/`、`public/` 与 `data/public/` 的目录关系，不要只下载单个源文件。先阅读[模板说明](../starter/README.md)，按本人实际情况填写[AI 使用说明模板](../starter/AI_USAGE.md)；模板不是学生本人的声明。课程说明见[学生页面](../public/index.html)。
 
-课程提供五份训练 CSV，分别用于五项任务；文件随新版学生包提供，位置见包内说明。不同任务不能共用旧版分类训练文件。
+本节适用 `course-uci-20261014-v3`，数据身份 `0f23098f6a76cf60424ca04bc1bfe1d7e96ad1ef1a59a632dd2b319ab162c671`。配套 v0.3.1 尚未发行，已发布 v0.3.0 仍使用 v1，不混用数据与工具。五份公开训练CSV位于 `data/public/training/`：LR/SVM共享同一Spambase来源、正式train/test划分、标准化及公开200条，文件分别对应两个算法；GBDT、Rice各公开200条。公开200是正式train代表性子集，不替代服务器正式训练。HMM公开10条完整20步序列，共200行；正式60/30条完整序列不变。
 
 | 任务 | 数据来源与训练文件 | 正式训练 / 留出测试 | 输入约定 |
 |---|---|---|---|
-| Logistic Regression | WDBC，`lr-train.csv` | 454 / 115 条 | 30 个特征；列 `f0` 至 `f29`，`y` 为0/1标签 |
+| Logistic Regression | Spambase，`lr-train.csv` | 1194 / 606 条 | 57 个特征；列 `f0` 至 `f56`，`y` 为0/1标签 |
 | Linear SVM | Spambase，`svm-train.csv` | 1194 / 606 条 | 57 个特征；列 `f0` 至 `f56`，`y` 为0/1标签 |
 | GBDT Regression | CCPP，`gbdt-train.csv` | 1199 / 601 条 | 4 个特征；列 `f0` 至 `f3`，`y` 为实数目标 |
-| K-Means | Seeds，`kmeans-train.csv` | 168 / 42 条 | 7 个特征；列 `f0` 至 `f6`，无类别标签列；K=3 |
+| K-Means | Rice Cammeo/Osmancik，`kmeans-train.csv` | 1199 / 601 条 | 7 个特征；列 `f0` 至 `f6`，无类别标签列；K=2 |
 | Discrete HMM | 监督序列，`hmm-train.csv` | 60 / 30 条完整序列 | 每序列20步，3个状态、4个观测符号 |
 
-课程发布正式训练部分，不发布留出测试部分。前四项数据来自 UCI，来源、许可与引用见包内 `DATA-SOURCES.md`；公开原始数据的标签可能被查回，不应将课程留出部分视为不可获得的秘密，也不要据此硬编码答案。
+课程只发布上述正式训练代表子集，不发布完整正式train或留出test及其真值。前四项服务器实际正式训练/测试为LR/SVM1194/606条、GBDT和Rice各1199/601条，不以学生公开200替代。前四项数据来自 UCI，来源、许可与引用见包内 `DATA-SOURCES.md`；公开原始数据的标签可能被查回，不应将课程留出部分视为不可获得的秘密，也不要据此硬编码答案。
 
-前四项 CSV 的特征已使用**正式训练集的统计量进行 z-score 标准化**，与服务器训练输入一致；**无需再次标准化**。分类标签及回归目标不做特征标准化，HMM的离散编号也不做标准化。请自行从已发布训练数据中划分本地验证集，用于调参与检查泛化；确定方案后，可用完整训练集重新训练。不要把留出测试或验证标签当作预测输入。
+前四项 CSV 的特征已使用**正式训练集的统计量进行 z-score 标准化**，与服务器训练输入一致；**无需再次标准化**。分类标签及回归目标不做特征标准化，HMM的离散编号也不做标准化。请自行从公开200条（HMM10整条）划分本地训练/验证集，用于调参与检查泛化；确定方案后，可用全部公开训练子集重新训练。公开子集不单独计算标准化统计量。不要把留出测试或验证标签当作预测输入。
 
-HMM CSV 的列为 `sequence_id,step,observation,state_label`。按 `sequence_id` 分组、按 `step` 排序，还原完整观测序列及对应状态标签；训练/验证划分以整条序列为单位，不能拆散时间步。K-Means训练 CSV 不发布真实类别，不能把样本顺序当簇标签，也不能从这些公开数据计算依赖真实类别的ARI/NMI。
+HMM CSV 的列为 `sequence_id,step,observation,state_label`，公开序列本地编号0..9，仅用于分组，不是特征或教师内部编号。按 `sequence_id` 分组、按 `step` 排序，还原完整观测序列及对应状态标签；训练/验证划分以整条序列为单位，不能拆散时间步。K-Means训练 CSV 不发布真实类别，不能把样本顺序当簇标签，也不能从这些公开数据计算依赖真实类别的ARI/NMI。
 
-公开接口以[assignment.hpp](../starter/include/assignment.hpp)为准：同一对象先 `fit` 再 `predict`，预测只接收特征或观测，不接收标签。输入宽度分别为LR30、SVM57、GBDT4、K-Means7；不要硬编码样本数量。HMM使用 `fit(observations, state_labels, n_states, n_symbols, seed)` 监督训练；观测属于[0,4)，状态属于[0,3)，两种编号空间不同。训练数据不直接提供转移、发射或初始分布，由实现内部建模；`predict(observations)`输出各序列对应长度的状态路径，状态标签含义跨序列一致。
+公开接口以[assignment.hpp](../starter/include/assignment.hpp)为准：同一对象先 `fit` 再 `predict`，预测只接收特征或观测，不接收标签。输入宽度分别为LR57、SVM57、GBDT4、K-Means7；不要硬编码样本数量。HMM使用 `fit(observations, state_labels, n_states, n_symbols, seed)` 监督训练；观测属于[0,4)，状态属于[0,3)，两种编号空间不同。训练数据不直接提供转移、发射或初始分布，由实现内部建模；`predict(observations)`输出各序列对应长度的状态路径，状态标签含义跨序列一致。
 
 需要Python 3.10+及支持C++17的编译器。官方评测使用**GCC 12、C++17、`-std=c++17 -O2`**；本机可以用兼容编译器。
 
@@ -48,7 +48,7 @@ HMM CSV 的列为 `sequence_id,step,observation,state_label`。按 `sequence_id`
 
 工具不自动安装编译器。命令不存在时按平台官方说明安装，不运行来源不明的脚本。在包含`starter/`和`student_tools/`的目录操作。
 
-公开诊断用于快速检查接口与基本效果，不等于完整正式训练/测试。新版诊断从已发布训练数据中选取前四项各120条训练、30条验证，HMM为8条完整训练序列、2条完整验证序列；诊断验证部分不是课程留出测试。正式训练数量以本节数据表为准，勿将诊断规模写死到算法中。
+公开诊断用于快速检查接口与基本效果，不等于正式训练/测试。新版诊断从对应公开训练子集中划分，LR、SVM、GBDT、KMeans各160条fit/40条predict，HMM为8条完整fit序列/2条完整predict序列；具体内容与身份见包内同版manifest；HMM按整条序列划分，诊断predict部分不是课程留出测试。当前新版尚未发行，勿将公开200或诊断规模写死到算法中。
 
 新版公开诊断文件位于学生包的`data/public/`，配套五份训练CSV；不把旧版工具、旧版JSON或旧维度混用。在学生包根目录执行：
 

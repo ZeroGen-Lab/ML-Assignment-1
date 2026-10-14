@@ -28,10 +28,13 @@ Cumulative quotas (256 intents, 256MiB total, candidate caps) are enforced
 under an exclusive ``flock`` on the root directory so concurrent creates
 coordinate atomically instead of check-then-write racing; a pre-existing root
 path is verified and NEVER re-chmodded (symlinked or wrong-mode roots are
-rejected with their target permissions untouched). Platforms lacking
-``flock``/``O_NOFOLLOW``/``O_DIRECTORY``/``geteuid`` fail closed with a
-stable IntentError (Windows semantics are NOT verified, and Windows is not
-supported); this is not a full TOCTOU/hard-link/power-loss guarantee.
+rejected with their target permissions untouched). POSIX platforms lacking
+``flock``/``O_NOFOLLOW``/``O_DIRECTORY``/``geteuid``
+fail closed with a stable IntentError. Windows dispatches the three public
+operations to the standard-library SQLite backend in ``intents_windows``;
+it does not use this POSIX layout or claim its owner/mode guarantees. Native
+Windows filesystem and locking behavior need Windows-runner verification.
+Neither backend claims a full TOCTOU/hard-link/power-loss guarantee.
 """
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -370,6 +373,10 @@ def _enforce_quota(rootfd, incoming):
 def create_intent(root, *, payload, ai_declaration,
                   selected_tasks=client._SELECTION_OMITTED):
     """Persist one explicit new intent; omission is the legacy API branch."""
+    if os.name == 'nt':
+        from student_tools import intents_windows
+        return intents_windows.create_intent(root, payload=payload,
+            ai_declaration=ai_declaration, selected_tasks=selected_tasks)
     _posix_primitives()
     tasks = None
     if selected_tasks is not client._SELECTION_OMITTED:
@@ -428,6 +435,9 @@ def create_intent(root, *, payload, ai_declaration,
 
 def read_intent(root, key):
     """Strict integrity re-read: same stored bytes, key and AI declaration."""
+    if os.name == 'nt':
+        from student_tools import intents_windows
+        return intents_windows.read_intent(root, key)
     _posix_primitives()
     _key(key)
     rootfd, _ = _open_root(root, create=False)
@@ -470,6 +480,10 @@ def read_intent(root, key):
 
 def record_receipt(root, key, *, submission_id, received_at):
     """Write-once receipt; identical replay is safe, differences refused."""
+    if os.name == 'nt':
+        from student_tools import intents_windows
+        return intents_windows.record_receipt(root, key, submission_id=submission_id,
+                                               received_at=received_at)
     _posix_primitives()
     _key(key)
     _key(submission_id)
