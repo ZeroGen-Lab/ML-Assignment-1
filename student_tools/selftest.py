@@ -216,7 +216,8 @@ def compile_project(compiler, project, workdir, timeout):
     include_flags = ['-I', str(include)]
     for extra in sorted(p for p in include.rglob('*') if p.is_dir()):
         include_flags += ['-I', str(extra)]
-    executable = Path(workdir) / 'selftest-driver'
+    executable_name = 'selftest-driver.exe' if platform.system() == 'Windows' else 'selftest-driver'
+    executable = Path(workdir) / executable_name
     command = [compiler, '-std=c++17', '-O2', '-Wall', '-Wextra', *include_flags,
                str(driver), *sources, '-o', str(executable)]
     try:
@@ -228,6 +229,8 @@ def compile_project(compiler, project, workdir, timeout):
     if done.returncode != 0:
         snippet = (done.stderr or done.stdout or '').strip()
         return None, 'compiler rejected the sources (first 1200 chars):\n' + snippet[:1200]
+    if not executable.is_file():
+        raise EnvironmentError_(f'compiler did not produce executable: {executable}')
     return executable, None
 
 
@@ -269,8 +272,11 @@ def run_binary(executable, payload, timeout, workdir):
         else:
             kwargs['start_new_session'] = True
         with open(out_path, 'wb') as out, open(err_path, 'wb') as err:
-            process = subprocess.Popen([str(executable)], stdin=subprocess.PIPE,
-                                       stdout=out, stderr=err, **kwargs)
+            try:
+                process = subprocess.Popen([str(executable)], stdin=subprocess.PIPE,
+                                           stdout=out, stderr=err, **kwargs)
+            except OSError as error:
+                raise EnvironmentError_(f'could not start executable: {error}') from error
             try:
                 process.communicate(payload.encode('utf-8'), timeout=timeout)
             except subprocess.TimeoutExpired:
@@ -632,8 +638,12 @@ def main(argv=None):
         failures = 0
         for task in selected_tasks:
             started = time.monotonic()
-            category, detail = (run_task(executable, task, args.timeout, workdir, public[task])
-                                if public is not None else run_task(executable, task, args.timeout, workdir))
+            try:
+                category, detail = (run_task(executable, task, args.timeout, workdir, public[task])
+                                    if public is not None else run_task(executable, task, args.timeout, workdir))
+            except EnvironmentError_ as error:
+                print(f'selftest: environment error: {error}', file=sys.stderr)
+                return 3
             elapsed = time.monotonic() - started
             status = 'ok' if category == 'ok' else f'FAIL {category}'
             line = f'task {task:<7}: {status:<22} ({elapsed:5.1f}s)'
