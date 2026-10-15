@@ -1,8 +1,10 @@
 # ML Assignment 1 · C++17 机器学习算法实践
 
-[下载 v0.3.1 学生包](https://github.com/ZeroGen-Lab/ML-Assignment-1/releases/tag/v0.3.1) · [作业任务](#作业任务) · [评分方式](#评分方式) · [运行与提交](#运行与提交) · [学生指南](docs/student-guide.md)
+[下载实验材料](https://github.com/ZeroGen-Lab/ML-Assignment-1/archive/refs/heads/main.zip) · [v0.3.1 发行包](https://github.com/ZeroGen-Lab/ML-Assignment-1/releases/tag/v0.3.1) · [作业任务](#作业任务) · [评分方式](#评分方式) · [运行与提交](#运行与提交) · [学生指南](docs/student-guide.md)
 
 本次作业要求使用 C++17 实现机器学习算法，完成数据读取、模型训练、预测与结果分析。
+
+**实验材料已开放，可以开始实现与本地自测。** 下载后进入包含 `starter/`、`student_tools/` 和 `data/` 的目录，按下方命令检查环境、实现算法并打包源码。在线提交、成绩查询和排行榜暂未开放。
 
 - **完成要求**：五项任务中任选四项；完成五项时，取最高四项成绩。
 - **成绩构成**：每项满分 25 分，作业满分 100 分，占课程总评的 35%。

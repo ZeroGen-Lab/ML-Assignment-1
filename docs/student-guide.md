@@ -1,6 +1,6 @@
 # ML-Assignment-1 学生使用指南
 
-提交入口开放时间另行通知。入口地址、开始/截止时刻、下载和反馈渠道见课程公告。本文的本机自测只检查公开样例，不产生正式课程成绩。
+实验材料已开放。先[下载完整材料](https://github.com/ZeroGen-Lab/ML-Assignment-1/archive/refs/heads/main.zip)，完成算法实现、本地自测和源码打包。在线提交、成绩查询和排行榜暂未开放；本地自测不产生课程成绩。
 
 ## 1. 需要完成什么
 
@@ -22,7 +22,7 @@ HMM精确平局取最小前驱、最小末状态；空观测和无可行路径�
 
 下载课程公告提供的完整学生包，或下载学生仓库源码 ZIP 后解压。保留 `starter/`、`student_tools/`、`docs/`、`public/` 与 `data/public/` 的目录关系，不要只下载单个源文件。先阅读[模板说明](../starter/README.md)，按本人实际情况填写[AI 使用说明模板](../starter/AI_USAGE.md)；模板不是学生本人的声明。课程说明见[学生页面](../public/index.html)。
 
-本节适用 `course-uci-20261014-v3`，数据身份 `0f23098f6a76cf60424ca04bc1bfe1d7e96ad1ef1a59a632dd2b319ab162c671`。配套 v0.3.1 尚未发行，已发布 v0.3.0 仍使用 v1，不混用数据与工具。五份公开训练CSV位于 `data/public/training/`：LR/SVM共享同一Spambase来源、正式train/test划分、标准化及公开200条，文件分别对应两个算法；GBDT、Rice各公开200条。公开200是正式train代表性子集，不替代服务器正式训练。HMM公开10条完整20步序列，共200行；正式60/30条完整序列不变。
+本节适用 `course-uci-20261014-v3`，数据身份 `0f23098f6a76cf60424ca04bc1bfe1d7e96ad1ef1a59a632dd2b319ab162c671`。当前配套学生包为 v0.3.1；使用本仓库提供的同版模板、数据和工具。五份公开训练CSV位于 `data/public/training/`：LR/SVM共享同一Spambase来源、正式train/test划分、标准化及公开200条，文件分别对应两个算法；GBDT、Rice各公开200条。公开200是正式train代表性子集，不替代服务器正式训练。HMM公开10条完整20步序列，共200行；正式60/30条完整序列不变。
 
 | 任务 | 数据来源与训练文件 | 正式训练 / 留出测试 | 输入约定 |
 |---|---|---|---|
@@ -48,7 +48,7 @@ HMM CSV 的列为 `sequence_id,step,observation,state_label`，公开序列本�
 
 工具不自动安装编译器。命令不存在时按平台官方说明安装，不运行来源不明的脚本。在包含`starter/`和`student_tools/`的目录操作。
 
-公开诊断用于快速检查接口与基本效果，不等于正式训练/测试。新版诊断从对应公开训练子集中划分，LR、SVM、GBDT、KMeans各160条fit/40条predict，HMM为8条完整fit序列/2条完整predict序列；具体内容与身份见包内同版manifest；HMM按整条序列划分，诊断predict部分不是课程留出测试。当前新版尚未发行，勿将公开200或诊断规模写死到算法中。
+公开诊断用于快速检查接口与基本效果，不等于正式训练/测试。新版诊断从对应公开训练子集中划分，LR、SVM、GBDT、KMeans各160条fit/40条predict，HMM为8条完整fit序列/2条完整predict序列；具体内容与身份见包内同版manifest；HMM按整条序列划分，诊断predict部分不是课程留出测试。勿将公开200或诊断规模写死到算法中。
 
 新版公开诊断文件位于学生包的`data/public/`，配套五份训练CSV；不把旧版工具、旧版JSON或旧维度混用。在学生包根目录执行：
 
@@ -107,12 +107,12 @@ python -B -m student_tools config
 
 鼓励AI辅助；AI辅助和自主完成均可提交，须理解、验证并简述最终实现。逐提交声明`ai_assisted`或`independent`，不直接加扣分，不能事后改写旧声明；AI标签是学生声明，不是自动检测结论。提交包同时包含AI_USAGE.md。
 
-提交入口开放时间另行通知。地址公布后按课程说明使用HTTPS入口；不要向自行猜测的地址发送身份或源码。结果以服务端收据为准，客户端不上传自报分数。遇到超时或结果未知，保留原意图/幂等标识查询或重试，不盲目创建新意图。幂等标识不是认证凭据。
+在线提交暂未开放。开放后使用提供的 HTTPS 入口；不要向自行猜测的地址发送身份或源码。结果以服务端收据为准，客户端不上传自报分数。遇到超时或结果未知，保留原意图/幂等标识查询或重试，不盲目创建新意图。幂等标识不是认证凭据。
 
-本地意图保存功能使用POSIX原语，仅支持macOS/Linux；Windows可使用selftest、package及config。需要本地保存时：
+本地意图保存支持 macOS、Linux 和 Windows：macOS/Linux 使用 POSIX 文件后端，Windows 使用 SQLite 后端。准备意图时必须用 `--tasks` 选择四个或五个不同任务，AI 声明须与实际使用一致；Windows PowerShell 将下面的 `python3` 换为 `python`。
 
 ```sh
-python3 -B -m student_tools prepare --archive submission.zip --ai independent
+python3 -B -m student_tools prepare --archive submission.zip --ai independent --tasks lr,svm,gbdt,kmeans,hmm
 python3 -B -m student_tools intent <idempotency_key>
 ```
 
@@ -124,7 +124,7 @@ python3 -B -m student_tools intent <idempotency_key>
 
 每任务选取完整有效提交，不拼不同提交的子分；AI本身不直接加扣分，须如实声明。正式计算、同分与截止政策见[课程题面](https://dasellmg.yuque.com/org-wiki-dasellmg-vsl5wg/ml2026/qckpnr5fvr269d83)及课程公告。[评分与提交概要](assignment-scoring-rules-20261010.md)不修改评测程序，不新增精确权重。
 
-可打开包内[成绩榜单](../public/leaderboard.html)；离线打开不请求网络、不生成排名，成绩未公布时显示“成绩暂未公布。”。在线可用标题右侧的“刷新”读取当前站点公开榜单；暂时加载失败时请稍后重试。提交与成绩开放以课程公告为准。本机公开诊断不是课程成绩；基础设施故障或缺评测证据不记学生0分，暂缓后按同规则重评。
+可打开包内[成绩榜单](../public/leaderboard.html)；离线打开不请求网络、不生成排名，成绩未公布时显示“成绩暂未公布。”。在线排行榜暂未开放。本机公开诊断不是课程成绩；基础设施故障或缺评测证据不记学生0分，暂缓后按同规则重评。
 
 截止以公告带时区时刻及服务端完成收包/校验后的接收时刻为准。每学号每天（Asia/Shanghai）最多10个新提交意图、最多1个未完成评测任务；原意图重试不重复计次。
 
@@ -144,4 +144,4 @@ python3 -B -m student_tools intent <idempotency_key>
 - 本机打包时间不是服务端接收时间；请求超时不表示一定失败。
 - 公开自测不产生正式课程分数；截止前暂估榜单不是最终结算。
 
-反馈附操作系统、Python/编译器版本、命令和简短错误。不公开凭证、真实姓名/完整学号或未公开数据。反馈渠道及提交入口开放时间见课程公告；不使用尚不存在的链接。
+反馈附操作系统、Python/编译器版本、命令和简短错误。不公开凭证、真实姓名/完整学号或未公开数据。在线入口开放后将在仓库首页补充。
