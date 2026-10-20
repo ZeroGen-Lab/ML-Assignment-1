@@ -54,11 +54,17 @@ int main() {
             const auto m = read<std::size_t>();
             const auto x = matrix(n, d);
             if (task == "gbdt") {
-                const auto y = vector<double>(n);
+                const auto y = vector<int>(n);
+                for (int label : y)
+                    if (label < 0 || label > 8) throw std::invalid_argument("GBDT training label");
                 const auto test = matrix(m, d);
-                assignment::GBDTRegressor model;
+                assignment::GBDTClassifier model;
                 model.fit(x, y, seed);
-                output(model.predict(test));
+                const auto prediction = model.predict(test);
+                if (prediction.size() != m) throw std::invalid_argument("GBDT prediction count");
+                for (int label : prediction)
+                    if (label < 0 || label > 8) throw std::invalid_argument("GBDT prediction label");
+                output(prediction);
             } else {
                 const auto y = vector<int>(n);
                 const auto test = matrix(m, d);
@@ -67,7 +73,7 @@ int main() {
                     model.fit(x, y, seed);
                     output(model.predict(test));
                 } else {
-                    assignment::LinearSVM model;
+                    assignment::SVM model;
                     model.fit(x, y, seed);
                     output(model.predict(test));
                 }

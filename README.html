@@ -1,47 +1,124 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ML Assignment 1</title>
-<style>
-body { margin: 0; padding: 24px 16px; font-family: sans-serif; line-height: 1.75; color: #24303c; background: #f6f9fb; }
-main { max-width: 860px; margin: auto; }
-p, li, td, th, nav { overflow-wrap: anywhere; }
-a { color: #1f6f8b; }
-a:focus-visible, pre:focus-visible, .table-scroll:focus-visible { outline: 3px solid #1f6f8b; outline-offset: 3px; }
-pre, .table-scroll { max-width: 100%; overflow-x: auto; }
-pre { padding: 12px; box-sizing: border-box; background: #eaf0f4; }
-code { font-family: monospace; }
-table { border-collapse: collapse; width: 100%; }
-th, td { padding: 8px; border: 1px solid #ccd7df; text-align: left; }
-@media (max-width: 560px) { body { padding: 16px 12px; } h1 { font-size: 1.55em; } }
-</style>
-</head>
-<body>
-<main>
-<nav aria-label="文档阅读导航"><a href="public/index.html">课程说明</a> · <a href="README.html">仓库首页</a> · <a href="docs/student-guide.html">学生指南</a> · <a href="docs/current-trial-scoring.html">当前试运行评分</a> · <a href="starter/README.html">模板说明</a> · <a href="docs/dataset-columns.html">数据列说明</a> · <a href="docs/assignment-scoring-rules-20261010.md">历史评分记录</a> · <a href="docs/trial-pass-thresholds.md">历史阈值记录</a> · <a href="README.md">Markdown 原文</a></nav>
-<h1>ML Assignment 1</h1>
-<p>C++17 机器学习课程作业：从 LR、SVM、GBDT、KMeans、HMM 中选择四项或五项，提交自己的实现。</p>
-<p>&gt; <strong>2026-10-20 课程说明更新；新版代码、数据和工具同步中。</strong> 当前公开模板仍可能含旧 GBDT 回归接口，不能据本说明认定仓库已经提供可运行的九分类模板。必须使用同一版本的接口、数据、工具与文档，不能把旧版回归文件和新版分类合同混用。在线提交、查分、自动榜单尚未开放；正式 HTTPS 地址未确认。Windows 实机验证为 <strong>NOT_RUN</strong>。</p>
-<h2>获取仓库</h2>
-<p>公开仓库：<a href="https://github.com/ZeroGen-Lab/ML-Assignment-1">ZeroGen-Lab/ML-Assignment-1</a>。</p>
-<ul><li>使用 GitHub 的 <strong>Code → Download ZIP</strong> 下载仓库源码；这是 GitHub 仓库快照，不是教师另行制作的发行 ZIP。</li><li>或在自己的机器上执行：</li></ul>
-<pre tabindex="0"><code class="language-sh">git clone https://github.com/ZeroGen-Lab/ML-Assignment-1.git
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ML Assignment 1 · C++17 机器学习算法实践</title><style>body{margin:0;background:#f2f5fb;color:#25334a;font:16px/1.85 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1040px;margin:28px auto;padding:32px 42px;background:#fff;border-radius:14px;box-shadow:0 8px 32px #263b6610;border-top:6px solid #4564d8}h1{color:#273d8a}h2{margin-top:2.2em;color:#344fa7;border-bottom:1px solid #dde5f5;padding-bottom:8px}h3{color:#3b548e}a{color:#315bc8}pre{padding:16px;background:#edf2fb;border:1px solid #dce5f5;border-radius:8px;overflow:auto;line-height:1.65}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}table{border-collapse:collapse;width:100%}th,td{border:1px solid #dbe3f1;text-align:left;padding:10px 12px}th{background:#edf2ff}.table-scroll{overflow-x:auto}nav{font-size:14px;margin-bottom:24px}@media(max-width:640px){main{margin:0;padding:20px 16px;border-radius:0}h1{font-size:1.6em}}</style></head><body><main><nav><a href="https://github.com/ZeroGen-Lab/ML-Assignment-1">课程仓库</a> · <a href="README.md">Markdown</a></nav><h1>ML Assignment 1 · C++17 机器学习算法实践</h1>
+<p>本次作业要求使用 <strong>C++17 和 C++ 标准库</strong>，从零实现机器学习算法，并在课程服务器上进行统一评测。你需要完成数据读取、模型训练、预测和实现说明，理解并能够解释自己提交的代码。</p>
+<p>五项任务中<strong>任选四项或五项</strong>：Logistic Regression、SVM、GBDT、K-Means、Discrete HMM。每项参考分最高25分；排行榜展示所选任务得分合计，选五项最高125分。课程计分取同一次提交中最高四项，满分100分，占课程总评的35%。</p>
+<p>在线提交地址和开放时间由课程公告提供。作业期限为正式课程公告发布后21天，具体截止时刻以公告为准。</p>
+<h2>1. 获取课程材料</h2>
+<p>在终端执行：</p>
+<pre tabindex="0"><code class="language-bash">git clone https://github.com/ZeroGen-Lab/ML-Assignment-1.git
 cd ML-Assignment-1</code></pre>
-<p>不再以教师自制发行 ZIP 作为新版获取入口。旧 <code>v0.3.1</code> 发行和旧 <code>data/public/training</code> 文件仅为历史，不推荐与新版混用。学生提交自己的源码时仍需使用配套工具的 <code>package</code> 操作；它与获取课程仓库是两回事。</p>
-<h2>从哪里开始</h2>
-<ol start="1"><li>阅读<a href="docs/student-guide.html">学生指南</a>，核对同步状态与本地执行风险。</li><li>阅读<a href="starter/README.html">接口与实现入口</a>，使用 C++17 和 C++ 标准库，保留 <code>Matrix</code> 接口，不调用现成机器学习库。</li><li>阅读<a href="docs/dataset-columns.html">数据列说明</a>。拟采用公开训练路径为 <code>data/training/{task}/train.csv</code>；路径出现在说明中不代表该文件已经进入当前 main。</li><li>阅读<a href="docs/current-trial-scoring.html">当前试运行评分说明</a>。本地自测不是服务器正式分；baseline 后置，不编造缺测成绩。</li></ol>
-<h2>最新课程合同</h2>
-<ul><li><strong>GBDT 是九类分类</strong>：真实 856 维词频特征，整数标签 <code>0..8</code>，接口为 <code>GBDTClassifier</code>，不再使用 <code>GBDTRegressor</code> 或旧回归数据。公开训练子集中非零列较少不表示降维，不补维、不裁列。</li><li>题面称 <strong>SVM</strong>，C++ 符号沿用 <code>LinearSVM</code>，不据此要求核函数。</li><li>各任务提供 200 条公开训练记录；HMM 的 200 行为 <strong>10 条完整序列 × 20 步</strong>，不是 200 条独立序列。HMM 为监督训练，保留序列边界与一致的状态标签含义。</li><li>每项参考分为 <code>25 × q</code>；分类质量为 <code>0.5 × accuracy + 0.5 × macro_f1</code>；HMM 为 <code>0.5 × state_accuracy + 0.5 × exact_sequence_accuracy</code>；KMeans 为 <code>0.6 × ari + 0.4 × nmi</code>。原始 Q 保留，q 夹到 <code>[0,1]</code>。</li><li>所选四项全部完成时合计最高 <strong>100</strong>；所选五项全部完成时最高 <strong>125</strong>。课程值取同一提交中已完成的最高四项，最高 <strong>100</strong>，不跨提交拼分；教师最终课程给分另定。</li><li>缺测保留 <code>None/null</code>，未执行为 <code>NOT_RUN</code>，不补 0；真实测得 0 分与未测不同。</li></ul>
-<h2>提交流程与身份信息</h2>
-<p>配套学生源码工具保留 <strong>package → submit → 同 key retry → status / submissions</strong> 流程。当前工具仍要求 <code>STUDENT_ID</code>、<code>STUDENT_NAME</code>、<code>STUDENT_NICKNAME</code>，不得因榜单不显示姓名就自行省略 <code>STUDENT_NAME</code>；这些字段不构成身份认证。</p>
-<p>在线入口尚未开放时，不填占位地址、不向猜测的 URL 发请求、不关闭 TLS 证书校验。正式地址和配套版本公布后，再按<a href="docs/student-guide.html">学生指南</a>操作。网络失败不新建重复提交意图，同一提交重试必须沿用原 key。</p>
-<p>榜单目标是显示学号与昵称、<strong>不显示姓名</strong>；所有人均可点击查看该提交允许公开的真实聚合指标。这里只说明最新课程要求，不证明服务、查分或榜单已经接通，不公开逐行预测、隐藏标签或私密日志。</p>
-<h2>本地检查不等于正式成绩</h2>
-<p>本地自测只检查接口、输出格式或有限 sanity 条件，不生成正式参考分。新版 GBDT 公开检查以 200 条训练自身作查询；合法常量输出也可通过数量/整数/标签域检查，不能据此证明学习有效或泛化能力。自测会在自己的机器上编译并执行源码，不是沙箱；只运行自己理解并愿意执行的代码。</p>
-<p>新版模板、数据与工具尚未成组同步时，不执行混合版本示例。历史评分文档仅作记录，以<a href="docs/current-trial-scoring.html">当前试运行评分说明</a>为准。</p>
-<nav aria-label="返回文档导航"><a href="public/index.html">课程说明</a> · <a href="README.html">仓库首页</a> · <a href="docs/student-guide.html">学生指南</a> · <a href="docs/current-trial-scoring.html">当前试运行评分</a> · <a href="starter/README.html">模板说明</a> · <a href="docs/dataset-columns.html">数据列说明</a> · <a href="docs/assignment-scoring-rules-20261010.md">历史评分记录</a> · <a href="docs/trial-pass-thresholds.md">历史阈值记录</a> · <a href="README.md">Markdown 原文</a></nav>
-</main>
-</body>
-</html>
+<p>不使用 Git 时，可以打开<a href="https://github.com/ZeroGen-Lab/ML-Assignment-1">课程仓库</a>，点击 <strong>Code → Download ZIP</strong>，解压后进入仓库目录。整个作业过程都在包含 <code>starter/</code> 和 <code>student_tools/</code> 的仓库根目录下操作。</p>
+<pre tabindex="0"><code class="language-text">ML-Assignment-1/
+├── README.md                    # 完整课程说明
+├── starter/
+│   ├── include/assignment.hpp   # 算法接口
+│   ├── src/assignment.cpp       # 算法实现
+│   ├── tools/driver.cpp         # 本地测试调用程序
+│   ├── README.md                # 你需要填写的实现说明
+│   └── AI_USAGE.md              # 你需要填写的 AI 使用声明
+├── data/training/               # 五项任务的训练数据
+└── student_tools/               # 检查、源码打包、提交与查分工具</code></pre>
+<p>你需要修改的是自己的算法源码和两份说明文件。课程材料通过仓库获取；提交时，由工具另行生成只包含你自己源码的 ZIP。</p>
+<h2>2. 五项任务要完成什么</h2>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>任务</th><th>问题类型</th><th>输入特征或序列结构</th><th>预测输出</th></tr></thead><tbody><tr><td>Logistic Regression（LR）</td><td>二分类</td><td>每条记录57维特征</td><td>每条记录一个标签：0或1</td></tr><tr><td>SVM</td><td>二分类</td><td>每条记录57维特征</td><td>每条记录一个标签：0或1</td></tr><tr><td>GBDT</td><td>九类分类</td><td>每条记录856维特征</td><td>每条记录一个整数标签：0至8</td></tr><tr><td>K-Means</td><td>聚类</td><td>每条记录7维特征，K=2</td><td>每条记录一个簇编号：0或1</td></tr><tr><td>Discrete HMM</td><td>监督序列建模与状态预测</td><td>3个状态、4种观测符号，每条序列20步</td><td>每条序列的逐位置状态编号</td></tr></tbody></table></div>
+<p>GBDT 的 <strong>856维均为真实特征</strong>，标签不计入特征维度。不要补零凑维度，也不要因为部分训练记录的某些特征为零就删除特征列。</p>
+<p>你需要自行设计并实现每项算法。模板中的占位返回值用于展示调用接口，不是参考算法；即使占位程序能编译、输出格式正确，也不代表具有有效的预测能力。</p>
+<h3>实现入口与接口</h3>
+<p>接口声明位于 <code>starter/include/assignment.hpp</code>，实现位于 <code>starter/src/assignment.cpp</code>。保留 <code>assignment</code> 命名空间和公开方法签名；可以调整 private 成员，也可以在 <code>include/</code>、<code>src/</code> 下增加标准库辅助源码。</p>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>类</th><th>训练方法</th><th>预测方法</th></tr></thead><tbody><tr><td><code>LogisticRegression</code></td><td><code>fit(x, y, seed)</code></td><td><code>predict(x)</code> 返回整数标签向量</td></tr><tr><td><code>SVM</code></td><td><code>fit(x, y, seed)</code></td><td><code>predict(x)</code> 返回整数标签向量</td></tr><tr><td><code>GBDTClassifier</code></td><td><code>fit(x, y, seed)</code></td><td><code>predict(x)</code> 返回整数类别向量</td></tr><tr><td><code>KMeans</code></td><td><code>fit(x, k, seed)</code></td><td><code>predict(x)</code> 返回整数簇编号向量</td></tr><tr><td><code>DiscreteHMM</code></td><td><code>fit(observations, state_labels, n_states, n_symbols, seed)</code></td><td><code>predict(observations)</code> 返回状态序列集合</td></tr></tbody></table></div>
+<p><code>x</code> 使用 <code>Matrix</code> 表示二维特征；分类标签使用 <code>std::vector&lt;int&gt;</code>。先在同一模型对象上调用 <code>fit</code>，再调用 <code>predict</code>。预测结果的数量和顺序必须与输入一致，不能在结果中额外输出说明文字。<code>seed</code> 是训练随机种子，相同输入与种子应得到可复现的结果。</p>
+<p>仅使用 C++ 标准库，不得调用现成机器学习库，也不得把答案、训练完成的模型或预测结果写死在源码中。不要修改配套调用程序来替代算法实现。</p>
+<h2>3. 提供给你的训练数据</h2>
+<p>每项任务提供200条训练记录，用于理解数据、开发实现和自行划分验证集。文件位于 <code>data/training/</code>：</p>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>任务</th><th>文件</th><th>字段及含义</th></tr></thead><tbody><tr><td>LR</td><td><code>lr/train.csv</code></td><td><code>f0</code> 至 <code>f56</code> 为57维特征，末列 <code>y</code> 为0或1标签</td></tr><tr><td>SVM</td><td><code>svm/train.csv</code></td><td>与 LR 使用相同的特征和标签记录</td></tr><tr><td>GBDT</td><td><code>gbdt/train.csv</code></td><td>首列 <code>label</code> 为0至8类别，后续 <code>x000</code> 至 <code>x855</code> 为856维特征</td></tr><tr><td>K-Means</td><td><code>kmeans/train.csv</code></td><td><code>f0</code> 至 <code>f6</code> 为7维特征，不提供类别标签列</td></tr><tr><td>HMM</td><td><code>hmm/train.csv</code></td><td><code>sequence_id,step,observation,state_label</code></td></tr></tbody></table></div>
+<p>LR/SVM 使用 Spambase 数据，K-Means 使用 Rice Cammeo and Osmancik 数据，GBDT 使用 CNAE-9 数据。具体来源、署名及数据处理说明随训练数据提供。</p>
+<p>LR/SVM 和 K-Means 的特征已完成课程规定的标准化，不需要再次标准化。GBDT 使用提供的856列词频特征，按文件中的原列顺序读取。分类标签不能作为输入特征。</p>
+<p>你可以自行从提供的数据中划分训练集和验证集，检查模型效果。不要将样本条数写死在算法中；接口应根据实际输入长度工作。课程服务器使用规定的训练、测试数据调用你的实现，测试标签不作为预测输入，也不随提交包上传。</p>
+<h3>HMM 的训练输入、预测目标与评分真值</h3>
+<p>HMM 的200行表示 <strong>10条完整序列，每条20步</strong>，不是200条独立序列。</p>
+<ol start="1"><li>按 <code>sequence_id</code> 分组，再按 <code>step</code> 从0至19排序，得到完整观测序列。</li><li><code>observation</code> 取值为0至3，组成 <code>observations</code>；同一行的 <code>state_label</code> 取值为0至2，组成对应的 <code>state_labels</code>。</li><li><code>fit</code> 同时接收这两组序列。状态标签在不同序列中的含义保持一致。</li><li><code>predict</code> 只接收观测序列，返回每个位置对应的状态编号；每条输出序列必须与输入等长。</li></ol>
+<p>评分真值是数据生成时实际采样得到的状态路径，不是要求预测结果复现某个解码程序的输出。训练文件提供的是带状态标签的序列，不直接提供需要照抄的转移矩阵、发射矩阵或初始状态分布。</p>
+<p>划分 HMM 训练集和验证集时，必须按完整序列划分，不能把同一条序列的不同时间步分到两侧。K-Means 的簇编号允许置换，不要求簇0、簇1直接等同于某个品种标签。</p>
+<h2>4. 本机环境</h2>
+<p>需要 <strong>Python 3.10或以上</strong>。本地编译自测还需要支持 <strong>C++17</strong> 的 <code>g++</code> 或 <code>clang++</code>；工具不会自动安装编译器。服务器使用统一的 Linux 编译运行环境进行评测。</p>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>系统</th><th>建议检查</th></tr></thead><tbody><tr><td>Windows</td><td>在 PowerShell 检查 <code>python --version</code>、<code>g++ --version</code>；可使用 MinGW-w64 GCC，或在 WSL 中使用 GCC</td></tr><tr><td>macOS</td><td>在终端检查 <code>python3 --version</code>、<code>clang++ --version</code></td></tr><tr><td>Linux</td><td>在终端检查 <code>python3 --version</code>、<code>g++ --version</code></td></tr></tbody></table></div>
+<p>以下示例用 <code>python</code> 表示 Python 3。macOS/Linux 如果命令为 <code>python3</code>，将示例中的 <code>python</code> 替换为 <code>python3</code>。不要将 MSVC 的 <code>cl</code> 当作具有相同命令行参数的 GCC 使用。</p>
+<h2>5. 开发与本地检查</h2>
+<p>建议先完成一个任务的接口和数据处理，再逐步实现、检查其余任务。修改代码后，在仓库根目录执行：</p>
+<pre tabindex="0"><code class="language-bash">python -B -m student_tools selftest --project starter --tasks lr,svm,gbdt,kmeans</code></pre>
+<p>完成五项时，可以使用：</p>
+<pre tabindex="0"><code class="language-bash">python -B -m student_tools selftest --project starter --tasks lr,svm,gbdt,kmeans,hmm</code></pre>
+<p>需要指定编译器时，例如：</p>
+<pre tabindex="0"><code class="language-bash">python -B -m student_tools selftest --project starter --tasks lr,svm,gbdt,kmeans --compiler clang++</code></pre>
+<p>本地检查帮助发现编译错误、接口错误和不符合要求的输出。它会在你的电脑上执行你自己的代码；检查通过不等于服务器参考分，也不能替代对算法效果的验证。</p>
+<p>GBDT 的本地格式检查使用提供的200条训练记录作为查询输入，检查输出数量及0至8整数类别范围。常量输出也可能满足格式检查，你仍需要自行检查算法是否学习到了有效规律。</p>
+<h2>6. 填写实现说明与 AI 声明</h2>
+<p>提交前填写 <code>starter/README.md</code>，说明你完成了哪些任务、主要代码文件、实现思路及验证方式。</p>
+<p>填写 <code>starter/AI_USAGE.md</code>，如实说明是否使用了 AI、使用的工具、用途，以及你如何检查和修改生成的内容。独立完成可以写明未使用 AI。无论是否使用 AI，你都需要理解并能解释自己的实现；提交命令中的声明应与文件内容一致。</p>
+<h2>7. 生成源码提交包</h2>
+<p>在仓库根目录执行：</p>
+<pre tabindex="0"><code class="language-bash">python -B -m student_tools package --project starter --output submission-v1.zip</code></pre>
+<p>工具会检查文件结构并生成 <code>submission-v1.zip</code>。ZIP 根目录应直接包含：</p>
+<pre tabindex="0"><code class="language-text">README.md
+AI_USAGE.md
+include/assignment.hpp
+src/assignment.cpp</code></pre>
+<p>可以包含 <code>include/</code> 下的 <code>.h/.hpp</code> 和 <code>src/</code> 下的 <code>.cpp</code> 辅助源码。不要额外套一层 <code>starter/</code> 或项目目录，不要上传整个仓库。</p>
+<ul><li>不得包含训练数据、答案、模型、可执行文件、第三方库或凭据。</li><li>最多64个文件；单文件最多1 MiB，解压总量及 ZIP 文件最多8 MiB。</li><li>文件使用 UTF-8，不能为空；不使用符号链接或越出目录的路径。</li><li>工具不覆盖已有 ZIP。修改代码后，请使用新文件名，例如 <code>submission-v2.zip</code>。</li></ul>
+<p>生成提交包只检查提交材料，不会把你本机的预测结果当作服务器成绩。</p>
+<h2>8. 配置提交信息</h2>
+<p>填写本人学号、姓名和昵称。学号按字符串使用，保留开头的0；排行榜只显示学号和昵称，不公开姓名。</p>
+<p>macOS/Linux：</p>
+<pre tabindex="0"><code class="language-bash">export STUDENT_ID=&quot;2026123456&quot;
+export STUDENT_NAME=&quot;张三&quot;
+export STUDENT_NICKNAME=&quot;我的昵称&quot;
+python -B -m student_tools config</code></pre>
+<p>Windows PowerShell：</p>
+<pre tabindex="0"><code class="language-powershell">$env:STUDENT_ID=&quot;2026123456&quot;
+$env:STUDENT_NAME=&quot;张三&quot;
+$env:STUDENT_NICKNAME=&quot;我的昵称&quot;
+python -B -m student_tools config</code></pre>
+<p>请替换示例信息。这些设置只在当前终端中生效；不要把自己的姓名等信息提交到课程公共仓库。</p>
+<h2>9. 上传、重试与查分</h2>
+<p>课程公告将提供评测地址的配置方式。下列命令中的 <code>EVAL_ENDPOINT</code> 使用公告给出的实际地址；如公告要求路径前缀，也应按公告配置。</p>
+<h3>首次上传</h3>
+<p>以选择 LR、SVM、GBDT、K-Means，且使用了 AI 为例，在 macOS/Linux 执行：</p>
+<pre tabindex="0"><code class="language-bash">python -B -m student_tools submit --archive submission-v1.zip --ai ai_assisted --tasks lr,svm,gbdt,kmeans --endpoint &quot;$EVAL_ENDPOINT&quot;</code></pre>
+<p>PowerShell 中对应为：</p>
+<pre tabindex="0"><code class="language-powershell">python -B -m student_tools submit --archive submission-v1.zip --ai ai_assisted --tasks lr,svm,gbdt,kmeans --endpoint &quot;$env:EVAL_ENDPOINT&quot;</code></pre>
+<p>独立完成使用 <code>--ai independent</code>；完成五项时，将任务列表改为 <code>lr,svm,gbdt,kmeans,hmm</code>。一次必须选择四个或五个不同任务。</p>
+<p>成功受理后，请保存工具返回的 <strong>提交编号 <code>submission_id</code></strong> 和 <strong>请求标识 <code>idempotency_key</code></strong>。受理表示服务器收到了源码，并不表示已经评测完成。此后由服务器排队、编译和运行；学生不需要 SSH 登录服务器，也不需要自己安装服务器端评测程序。</p>
+<h3>网络异常时重试原请求</h3>
+<p>如果网络中断或没有收到明确结果，使用返回的原请求标识进行 <code>retry</code>。下面用 <code>原请求标识</code> 表示工具返回的实际值：</p>
+<pre tabindex="0"><code class="language-bash">python -B -m student_tools retry 原请求标识 --endpoint &quot;$EVAL_ENDPOINT&quot;</code></pre>
+<p>PowerShell 将地址参数改为 <code>&quot;$env:EVAL_ENDPOINT&quot;</code>。同一请求的重试沿用原源码、AI 声明和任务选择，不应再次执行 <code>submit</code> 制造另一笔提交。请保留工具生成的本地 <code>.student-intents</code> 目录。</p>
+<p>如果修改了算法源码，应重新生成源码 ZIP，并作为一次新提交上传。</p>
+<h3>查询状态和结果</h3>
+<p>使用原提交编号查询：</p>
+<pre tabindex="0"><code class="language-bash">python -B -m student_tools status 提交编号 --endpoint &quot;$EVAL_ENDPOINT&quot;</code></pre>
+<p>查看自己的提交记录：</p>
+<pre tabindex="0"><code class="language-bash">python -B -m student_tools submissions --endpoint &quot;$EVAL_ENDPOINT&quot;</code></pre>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>状态</th><th>含义</th></tr></thead><tbody><tr><td><code>QUEUED</code></td><td>已受理，正在排队</td></tr><tr><td><code>RUNNING</code></td><td>正在评测</td></tr><tr><td><code>COMPLETED</code></td><td>本次评测完成，可以查看结果</td></tr><tr><td><code>STUDENT_FAILURE</code></td><td>编译、运行或输出不符合要求，需要查看错误信息并修改代码</td></tr><tr><td><code>INFRASTRUCTURE_FAILURE</code></td><td>服务器环境发生问题，不直接作为学生零分处理</td></tr></tbody></table></div>
+<p>每个学号同时只能有一笔未完成提交；按北京时间自然日，每天最多成功受理10次新提交。原请求的重试不应作为一笔新的源码提交重复受理。</p>
+<h2>10. 服务器如何评测</h2>
+<p>服务器接收源码后，统一编译并在隔离环境中执行。评测程序调用你实现的 <code>fit</code> 和 <code>predict</code>，使用规定数据计算真实指标，再保存到本次提交记录。提交内容是代码，分数由服务器计算。</p>
+<p>每次选择的各任务按规定训练、预测，不接受本机自报分数或本机耗时。程序需要在分配的计算资源和时间内结束；请控制内存使用，避免无界循环、无限输出及依赖网络下载。</p>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>评测预算</th><th>限制</th></tr></thead><tbody><tr><td>CPU</td><td>1核</td></tr><tr><td>内存</td><td>1 GiB</td></tr><tr><td>编译时间</td><td>60秒</td></tr><tr><td>单项训练与预测</td><td>30秒</td></tr><tr><td>所选任务内部总时间</td><td>300秒</td></tr><tr><td>输出大小</td><td>2 MiB</td></tr></tbody></table></div>
+<p>本机自测使用本机资源；正式比较以服务器实际评测结果为准。</p>
+<p>本次提交编号同时用于状态和结果查询。排队、处理中或尚未测得的项目显示未完成，不用0分代替；如果确实完成评测并得到0分，则按实际结果显示。</p>
+<h2>11. 参考分、课程计分与排行榜</h2>
+<h3>各项效果指标</h3>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>任务</th><th>原始效果质量 Q</th></tr></thead><tbody><tr><td>LR / SVM / GBDT 分类</td><td><code>0.5 × Accuracy + 0.5 × Macro-F1</code></td></tr><tr><td>K-Means</td><td><code>0.6 × ARI + 0.4 × NMI</code></td></tr><tr><td>HMM</td><td><code>0.5 × state_accuracy + 0.5 × exact_sequence_accuracy</code></td></tr></tbody></table></div>
+<p>Accuracy 是分类正确比例；Macro-F1 是对各类别 F1 的等权平均。GBDT 按固定九个类别评价，不能通过少预测一些类别缩小评价范围。</p>
+<p>ARI 和 NMI 衡量聚类结果与类别划分的一致性，簇编号互换不直接算错。HMM 的 state accuracy 统计逐位置状态是否正确；exact sequence accuracy 只有在整条20步状态均正确时才计为该序列正确。</p>
+<p>令 <code>q = min(1, max(0, Q))</code>，每项参考分为：</p>
+<pre tabindex="0"><code class="language-text">任务参考分 = 25 × q</code></pre>
+<p>例如 Accuracy 为0.80、Macro-F1 为0.76，则 Q 为0.78，该项参考分为19.5分。缺测的指标不参与虚构计算，也不自动记成0分。</p>
+<h3>任务得分合计与课程值</h3>
+<ul><li>所选四项均完成时，任务得分合计最高100分。</li><li>所选五项均完成时，任务得分合计最高125分。</li><li>课程计分取同一次提交中最高四项，最高100分；不把多次提交中各自最好的单项拼到一起。</li><li>任一所选任务还未测得结果时，所选任务合计显示未完成。已有四项完成时，可以计算该次提交的课程值。</li><li>作业占课程总评的35%；例如课程值为80分，对总评的贡献为28分。最终课程成绩由教师统一评定。</li></ul>
+<h3>排行榜展示</h3>
+<p>排行榜显示名次、学号、昵称、五项任务得分和“任务得分合计”，不显示姓名。所有人都可以点击任务得分，查看相应的真实指标，例如 Accuracy、Macro-F1 或 HMM 两项准确率。</p>
+<p>同一学号按同一评测规则选择一个完整提交展示，采用任务得分合计最高的一次；同分时保留较早提交。未选择的任务显示“未选”，未测得的任务显示“未完成”，不会伪填分数。原始指标与参考分保存在各自的提交记录中。</p>
+<h2>12. 提交前自查</h2>
+<ol start="1"><li>已选择四项或五项，类名和公开方法签名与模板一致。</li><li>输入多少条记录，就返回多少个预测；HMM 保留每条序列长度与顺序。</li><li>没有把标签当作预测输入，没有硬编码数据答案。</li><li><code>starter/README.md</code> 和 <code>starter/AI_USAGE.md</code> 已按实际实现填写。</li><li>已使用工具生成源码 ZIP，未夹带数据、模型、程序或整个仓库。</li><li>学号、姓名、昵称及 AI 声明填写正确。</li><li>已保存提交编号和请求标识，网络异常使用原请求重试。</li></ol>
+<p>遇到问题时，向课程助教提供提交编号、错误代码和简要复现步骤；不要公开上传个人资料、完整私有日志或账户凭据。</p></main></body></html>

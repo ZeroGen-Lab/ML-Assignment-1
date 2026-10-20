@@ -1,47 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Starter：实现入口与新版同步状态</title>
-<style>
-body { margin: 0; padding: 24px 16px; font-family: sans-serif; line-height: 1.75; color: #24303c; background: #f6f9fb; }
-main { max-width: 860px; margin: auto; }
-p, li, td, th, nav { overflow-wrap: anywhere; }
-a { color: #1f6f8b; }
-a:focus-visible, pre:focus-visible, .table-scroll:focus-visible { outline: 3px solid #1f6f8b; outline-offset: 3px; }
-pre, .table-scroll { max-width: 100%; overflow-x: auto; }
-pre { padding: 12px; box-sizing: border-box; background: #eaf0f4; }
-code { font-family: monospace; }
-table { border-collapse: collapse; width: 100%; }
-th, td { padding: 8px; border: 1px solid #ccd7df; text-align: left; }
-@media (max-width: 560px) { body { padding: 16px 12px; } h1 { font-size: 1.55em; } }
-</style>
-</head>
-<body>
-<main>
-<nav aria-label="文档阅读导航"><a href="../public/index.html">课程说明</a> · <a href="../README.html">仓库首页</a> · <a href="../docs/student-guide.html">学生指南</a> · <a href="../docs/current-trial-scoring.html">当前试运行评分</a> · <a href="README.html">模板说明</a> · <a href="../docs/dataset-columns.html">数据列说明</a> · <a href="../docs/assignment-scoring-rules-20261010.md">历史评分记录</a> · <a href="../docs/trial-pass-thresholds.md">历史阈值记录</a> · <a href="README.md">Markdown 原文</a></nav>
-<h1>Starter：实现入口与新版同步状态</h1>
-<p>2026-10-20。<strong>新版模板、训练数据、工具同步中；当前公开模板仍可能是旧 GBDT 回归接口。</strong> 本页描述最新课程要求，不证明当前 main 已提供可执行九分类示例。不要按新文档运行混合旧版模板、数据和工具。</p>
-<h2>源码与约束</h2>
-<ul><li>课程仓库：<a href="https://github.com/ZeroGen-Lab/ML-Assignment-1">ZeroGen-Lab/ML-Assignment-1</a>。使用 GitHub <strong>Code → Download ZIP</strong> 或 clone 获取；不是教师自制发行 ZIP。旧 <code>v0.3.1</code> 仅作历史。</li><li>声明位于 <code>starter/include/assignment.hpp</code>，实现位于 <code>starter/src/assignment.cpp</code>；相对本目录为 <code>include/assignment.hpp</code> 和 <code>src/assignment.cpp</code>。</li><li>使用 <strong>C++17 与 C++ 标准库</strong>，不调用现成机器学习库。保留 <code>Matrix</code> 接口，不要求改为纯 C 或连续存储。</li><li>从 LR、SVM、GBDT、KMeans、HMM 选择四项或五项。题面称 SVM，保留 <code>LinearSVM</code> 符号，不据此要求核函数。</li></ul>
-<h2>新版 GBDT 是分类，不是回归</h2>
-<p>最新合同为 <strong>GBDTClassifier、856 维真实特征、整数九类 0..8</strong>。</p>
-<ul><li><code>fit</code> 接收 <code>Matrix</code>、<code>vector&lt;int&gt;</code> 训练标签和 <code>std::uint64_t seed</code>。</li><li><code>predict</code> 返回与输入行数相同的 <code>vector&lt;int&gt;</code>，每值 <code>0..8</code>。</li><li>公开训练 200 行，表头 <code>label,x000,...,x855</code>，首列标签，其余 856 列依次为真实词频。</li><li>保留完整维度；子集中某列全零不表示可删除或补造特征。</li><li>旧 <code>GBDTRegressor</code>、浮点回归输出和 CCPP 数据不适用。若实际头文件仍为旧接口，说明配套同步尚未完成，不要把其签成新版可运行模板。</li></ul>
-<p>脚手架中的常量输出仅示例接口，不是训练模型。接口、工具和数据必须按最终同版文件成组使用。</p>
-<h2>数据与 HMM 序列</h2>
-<p>拟采用公开训练路径为 <code>data/training/{task}/train.csv</code>；合并元数据为 <code>data/training/manifest.json</code>、<code>data/training/DATA-SOURCES.md</code>，GBDT 单项元数据为 <code>data/training/gbdt/manifest.json</code>。这些是仓库根路径，<strong>不保证已进入当前 main</strong>。旧 <code>data/public/training</code> 仅历史，不推荐混用。</p>
-<p>各任务 200 条公开训练记录。HMM 的 200 行表示 <strong>10 条完整序列 × 20 步</strong>，字段 <code>sequence_id,step,observation,state_label</code>；监督训练同时使用 observations 和 state_labels，保持边界、步顺序及跨序列一致的标签含义，不拆散或拼接成伪序列。</p>
-<p>详细字段、预处理沿革、来源和 HMM 许可 PARTIAL 状态见<a href="../docs/dataset-columns.html">数据列说明</a>。</p>
-<h2>本地检查与源码提交</h2>
-<p>本地自测只核接口、格式或有限 sanity 条件，<strong>不是正式分</strong>。新版 GBDT 公开查询为 200 条训练自身，仅检查数量、整数及标签域；合法常量预测也可过门，不证明泛化。自测会在自己的机器编译执行源码，不是沙箱，只执行自己理解并愿意运行的代码。同步完成前不提供混合版本的编译或自测命令。Windows 实机 NOT_RUN。</p>
-<p>学生源码提交流程保留 <strong>package → submit → 同 key retry → status / submissions</strong>；package 是打包自己的实现，不是获取课程仓库。当前工具仍要求 <code>STUDENT_ID</code>、<code>STUDENT_NAME</code>、<code>STUDENT_NICKNAME</code>，字段不构成身份认证。网络不明不新建重复提交意图，保留原 key。</p>
-<p>在线提交、查分、自动榜单尚未开放，正式 HTTPS URL 未确认；不要使用猜测或占位 URL，不关闭 TLS 校验。</p>
-<h2>分数边界</h2>
-<p>每项参考分 <code>25 × q</code>；HMM 为 <code>0.5 × state_accuracy + 0.5 × exact_sequence_accuracy</code>，完整 20 步全对才算整序列正确。所选四项全部 READY 最高 100，所选五项全部 READY 最高 125；课程值取同一提交最高四项，最高 100，教师最终课程分另定。缺测为 None/null、不补 0，未执行指标 NOT_RUN，baseline 后置。</p>
-<p>榜单目标显示学号、昵称、不显示姓名；所有人可点击查看允许公开的真实聚合指标，不能据此宣称线上功能已接通。</p>
-<p>阅读<a href="../docs/student-guide.html">学生指南</a>、<a href="../docs/current-trial-scoring.html">当前试运行评分说明</a>，或返回<a href="../README.html">仓库首页</a>。</p>
-<nav aria-label="返回文档导航"><a href="../public/index.html">课程说明</a> · <a href="../README.html">仓库首页</a> · <a href="../docs/student-guide.html">学生指南</a> · <a href="../docs/current-trial-scoring.html">当前试运行评分</a> · <a href="README.html">模板说明</a> · <a href="../docs/dataset-columns.html">数据列说明</a> · <a href="../docs/assignment-scoring-rules-20261010.md">历史评分记录</a> · <a href="../docs/trial-pass-thresholds.md">历史阈值记录</a> · <a href="README.md">Markdown 原文</a></nav>
-</main>
-</body>
-</html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ML Assignment 1 · C++17 机器学习算法实践</title><style>body{margin:0;background:#f2f5fb;color:#25334a;font:16px/1.85 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1040px;margin:28px auto;padding:32px 42px;background:#fff;border-radius:14px;box-shadow:0 8px 32px #263b6610;border-top:6px solid #4564d8}h1{color:#273d8a}h2{margin-top:2.2em;color:#344fa7;border-bottom:1px solid #dde5f5;padding-bottom:8px}h3{color:#3b548e}a{color:#315bc8}pre{padding:16px;background:#edf2fb;border:1px solid #dce5f5;border-radius:8px;overflow:auto;line-height:1.65}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}table{border-collapse:collapse;width:100%}th,td{border:1px solid #dbe3f1;text-align:left;padding:10px 12px}th{background:#edf2ff}.table-scroll{overflow-x:auto}nav{font-size:14px;margin-bottom:24px}@media(max-width:640px){main{margin:0;padding:20px 16px;border-radius:0}h1{font-size:1.6em}}</style></head><body><main><nav><a href="../README.html">完整课程说明</a></nav><h1>实现说明</h1>
+<h2>完成任务</h2>
+<p>填写你完成的四项或五项任务。</p>
+<h2>代码结构</h2>
+<p>列出主要源码文件及各自作用。</p>
+<h2>实现思路</h2>
+<p>说明各任务的实现、关键设计和参数选择。</p>
+<h2>验证方式</h2>
+<p>说明你进行了哪些检查、观察到的效果和已知限制。</p></main></body></html>

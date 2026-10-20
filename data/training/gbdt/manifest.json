@@ -1,0 +1,55 @@
+{
+  "attribution": "Ciarelli, P. & Oliveira, E. (2009). CNAE-9. UCI Machine Learning Repository.",
+  "changes": "Preserved all 856 features; grouped split; labels 1..9 mapped to 0..8; CSV header added.",
+  "class_labels": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "data_version": "course-advisor-20261020-v1",
+  "feature_count": 856,
+  "files": {
+    "train.csv": {
+      "bytes": 347086,
+      "sha256": "214003a2c6c1af6f461867f9fca36ffda9c0fa183c4b8b13348a405031b83504"
+    }
+  },
+  "format": "ASCII CSV; header label,x000,...,x855; integer cells; no fitted transforms",
+  "integration_status": "CANDIDATE_NOT_DRIVER_COMPATIBILITY",
+  "license": "CC BY 4.0",
+  "schema": "a-neutral-classification-data-candidate-v1",
+  "source_doi": "https://doi.org/10.24432/C51G7P",
+  "source_label_to_protocol": {
+    "1": 0,
+    "2": 1,
+    "3": 2,
+    "4": 3,
+    "5": 4,
+    "6": 5,
+    "7": 6,
+    "8": 7,
+    "9": 8
+  },
+  "source_url": "https://archive.ics.uci.edu/static/public/233/cnae+9.zip",
+  "split_version": "cnae9-feature-group-sha256-dp-v1",
+  "task": "gbdt",
+  "training_class_counts": {
+    "0": 23,
+    "1": 23,
+    "2": 22,
+    "3": 22,
+    "4": 22,
+    "5": 22,
+    "6": 22,
+    "7": 22,
+    "8": 22
+  },
+  "training_records": 200,
+  "warning": "Public source is identifiable; evaluation data is not a secret-source holdout."
+}

@@ -1,0 +1,72 @@
+{
+  "data_version": "course-advisor-20261020-v1",
+  "tasks": {
+    "lr": {
+      "file": "lr/train.csv",
+      "rows": 200,
+      "bytes": 231518,
+      "sha256": "bb95e929bfe25552929945f2c85e47637458019f008a522e98844680376c7723",
+      "features": 57,
+      "labels": [
+        0,
+        1
+      ]
+    },
+    "svm": {
+      "file": "svm/train.csv",
+      "rows": 200,
+      "bytes": 231518,
+      "sha256": "bb95e929bfe25552929945f2c85e47637458019f008a522e98844680376c7723",
+      "features": 57,
+      "labels": [
+        0,
+        1
+      ]
+    },
+    "gbdt": {
+      "file": "gbdt/train.csv",
+      "rows": 200,
+      "bytes": 347086,
+      "sha256": "214003a2c6c1af6f461867f9fca36ffda9c0fa183c4b8b13348a405031b83504",
+      "features": 856,
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    "kmeans": {
+      "file": "kmeans/train.csv",
+      "rows": 200,
+      "bytes": 27495,
+      "sha256": "849555fd52e4d90009f5d1865d33028e3388c8308811c46b05e67e379f9e39ee",
+      "features": 7,
+      "clusters": 2
+    },
+    "hmm": {
+      "file": "hmm/train.csv",
+      "rows": 200,
+      "bytes": 1741,
+      "sha256": "ad4676530d835b7ed3eb414570d9bf8c907bd2c1cdb9efa041b8f0fc93ff98a2",
+      "labels": [
+        0,
+        1,
+        2
+      ],
+      "sequences": 10,
+      "steps_per_sequence": 20,
+      "symbols": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  }
+}

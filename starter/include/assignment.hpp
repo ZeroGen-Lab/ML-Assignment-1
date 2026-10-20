@@ -19,28 +19,17 @@ private:
     double bias_ = 0.0;
 };
 
-class LinearSVM {
+class SVM {
 public:
     void fit(const Matrix& x, const std::vector<int>& y, std::uint64_t seed);
     std::vector<int> predict(const Matrix& x) const;
-private:
-    std::vector<double> weights_;
-    double bias_ = 0.0;
 };
 
-class GBDTRegressor {
+// New-version classification API: labels 0..8, all 856 input features retained.
+class GBDTClassifier {
 public:
-    void fit(const Matrix& x, const std::vector<double>& y, std::uint64_t seed);
-    std::vector<double> predict(const Matrix& x) const;
-private:
-    struct Stump {
-        std::size_t feature;
-        double threshold;
-        double left;
-        double right;
-    };
-    double mean_ = 0.0;
-    std::vector<Stump> trees_;
+    void fit(const Matrix& x, const std::vector<int>& y, std::uint64_t seed);
+    std::vector<int> predict(const Matrix& x) const;
 };
 
 class KMeans {
