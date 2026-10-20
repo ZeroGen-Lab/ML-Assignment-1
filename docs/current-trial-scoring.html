@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>当前试运行评分说明</title>
+<style>
+body { margin: 0; padding: 24px 16px; font-family: sans-serif; line-height: 1.75; color: #24303c; background: #f6f9fb; }
+main { max-width: 860px; margin: auto; }
+p, li, td, th, nav { overflow-wrap: anywhere; }
+a { color: #1f6f8b; }
+a:focus-visible, pre:focus-visible, .table-scroll:focus-visible { outline: 3px solid #1f6f8b; outline-offset: 3px; }
+pre, .table-scroll { max-width: 100%; overflow-x: auto; }
+pre { padding: 12px; box-sizing: border-box; background: #eaf0f4; }
+code { font-family: monospace; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px; border: 1px solid #ccd7df; text-align: left; }
+@media (max-width: 560px) { body { padding: 16px 12px; } h1 { font-size: 1.55em; } }
+</style>
+</head>
+<body>
+<main>
+<nav aria-label="文档阅读导航"><a href="../public/index.html">课程说明</a> · <a href="../README.html">仓库首页</a> · <a href="student-guide.html">学生指南</a> · <a href="current-trial-scoring.html">当前试运行评分</a> · <a href="../starter/README.html">模板说明</a> · <a href="dataset-columns.html">数据列说明</a> · <a href="assignment-scoring-rules-20261010.md">历史评分记录</a> · <a href="trial-pass-thresholds.md">历史阈值记录</a> · <a href="current-trial-scoring.md">Markdown 原文</a></nav>
+<h1>当前试运行评分说明</h1>
+<p>更新日期：2026-10-20。policy：<code>trial-quality25-advisor-20261020-v1</code>。</p>
+<p>&gt; <strong>这是最新课程合同，不是服务器已经完成评分的证明。</strong> 新版模板、数据与工具同步中；在线提交、查分、自动榜尚未开放，受信 HTTPS 正式地址未确认。旧评分文档和旧 <code>v0.3.1</code> 只作历史，不混用、不据此重算旧提交。Windows 实机为 NOT_RUN；baseline 后置。</p>
+<h2>1. 每项参考分：25 × q</h2>
+<p>先验证真实有限原始指标及其任务域，计算原始 Q，再取 <code>q = min(1, max(0, Q))</code>；每项参考分为 <code>25 × q</code>。保留原始指标和原始 Q，不从参考分反推指标，不以裁剪掩盖错误输入。</p>
+<div class="table-scroll" role="region" aria-label="文档表格" tabindex="0"><table><thead><tr><th>任务</th><th>原始 Q</th><th>关键约束</th></tr></thead><tbody><tr><td>LR</td><td><code>0.5 × accuracy + 0.5 × macro_f1</code></td><td>固定二分类类别全集</td></tr><tr><td>SVM</td><td><code>0.5 × accuracy + 0.5 × macro_f1</code></td><td>题面称 SVM，符号保留 LinearSVM</td></tr><tr><td>GBDT</td><td><code>0.5 × accuracy + 0.5 × macro_f1</code></td><td>九类分类，固定类别 <code>0..8</code>，不是 RMSE 回归</td></tr><tr><td>HMM</td><td><code>0.5 × state_accuracy + 0.5 × exact_sequence_accuracy</code></td><td>完整 20 步序列全部正确才计一次 exact 正确</td></tr><tr><td>KMeans</td><td><code>0.6 × ari + 0.4 × nmi</code></td><td>负原始 Q 保留，只有 q 和参考分夹到 0</td></tr></tbody></table></div>
+<p>分类 accuracy、macro_f1 和 HMM 两项准确率均应在 <code>[0,1]</code>；ARI 为 <code>[-1,1]</code>，NMI 为 <code>[0,1]</code>。非有限值或非法任务域不是正常成绩，不以夹分方式将非法输入变成有效分。分类 macro_f1 使用同版固定类别全集，零分母记 0，不按预测中实际出现的类别缩减分母。</p>
+<p>HMM 整序列项权重为 <strong>50%</strong>，不是小额附加项。逐状态准确率较高仍可能整序列正确率低，不据此自行更改权重、重造真值或判实现必错。</p>
+<h2>2. 所选任务合计：四项 100 / 五项 125</h2>
+<p>从五个任务中选四项或五项。<strong>同一提交所选全部任务 READY</strong> 才有完整所选合计：选四项最高 100，选五项最高 125，不将五项合计归一化为 100。</p>
+<ul><li>未选任务显示“未选”或 <code>--</code>，不补 0。</li><li>所选任一缺测，所选合计为未完成/null。</li><li>真实测得 0 分是有效成绩，与未测不同。</li><li>缺测保持 <code>None/null</code>，未执行保持 <code>NOT_RUN</code>；运行来源未确认时不授分。</li></ul>
+<p>本地格式门通过、受理成功、QUEUED/RUNNING、编译成功或合成测试通过，均不等于任务 READY 或正式参考分。</p>
+<h2>3. 课程值：同一提交最高四项，满分 100</h2>
+<p>同一提交至少四项 READY，才计算课程值：取该提交已完成任务中的最高四项参考分相加，满分 100。</p>
+<p>选五项而只有四项 READY 时可以有课程值，但所选任务合计仍未完成/null。不得跨提交挑单项拼分。系统课程值与教师最终课程给分分账，最终人工分由教师另定，不由工具或本文代造。</p>
+<h2>4. 提交与榜单的比较边界</h2>
+<p>仅在相同评分规则、数据、评估方式和运行环境版本 内比较：每学生采用一个所选任务完整的提交，按真实所选合计最高选择；同分按 <code>received_at</code> 较早，再按 <code>submission_id</code> 消歧。四项与五项合计不归一化，不跨提交拼接，不混旧 policy、旧数据或未确认的运行来源。</p>
+<p>课程最高四项规则与所选合计的完整性规则是两件事；不能把只有四项 READY 的五选提交标成五项全部完成。</p>
+<p>榜单要求显示学号和昵称、<strong>不显示姓名</strong>；所有人均可点击相应提交，查看允许公开的真实聚合指标和参考分。当前学生工具仍要求 STUDENT_ID/STUDENT_NAME/STUDENT_NICKNAME，不能据显示规则自行删除 STUDENT_NAME，也不把这些字段当身份认证。</p>
+<p>公开白名单不包含逐行预测、隐藏标签、私密日志或凭据。说明中的展示要求不表示在线榜单、查询 API 或点击指标功能已经开放。</p>
+<h2>5. 本地自测、baseline 与实际开放</h2>
+<p>本地 selftest 只做接口、格式和有限 sanity 检查，不产正式参考分。新版公开 GBDT 仅用 200 条训练自身作查询，合法常量输出也能过数量/整数/标签域检查，不能证明学习或泛化能力。</p>
+<p>baseline 后置，没有真实输出就保持 NOT_RUN；不拿教师合成例、旧指标、文档算例或格式检查结果代填。正式入口、受信 HTTPS 与同版实现状态待真实公告，不提供占位 URL，不关闭证书校验。</p>
+<p>参见<a href="student-guide.html">学生指南</a>、<a href="dataset-columns.html">数据列说明</a>和<a href="../README.html">仓库首页</a>。</p>
+<nav aria-label="返回文档导航"><a href="../public/index.html">课程说明</a> · <a href="../README.html">仓库首页</a> · <a href="student-guide.html">学生指南</a> · <a href="current-trial-scoring.html">当前试运行评分</a> · <a href="../starter/README.html">模板说明</a> · <a href="dataset-columns.html">数据列说明</a> · <a href="assignment-scoring-rules-20261010.md">历史评分记录</a> · <a href="trial-pass-thresholds.md">历史阈值记录</a> · <a href="current-trial-scoring.md">Markdown 原文</a></nav>
+</main>
+</body>
+</html>

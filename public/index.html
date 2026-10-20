@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>机器学习作业一 · 学生使用说明</title>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ML Assignment 1：课程说明与同步状态</title>
 <style>
 :root {
   color-scheme: light;
@@ -92,85 +88,20 @@ footer {
   th, td { padding: 6px 7px; font-size: 0.92em; }
   main { padding: 16px 10px 32px; }
 }
-</style>
-</head>
-<body>
-<div class="banner">
-  提交入口开放时间另行通知
-  <span class="sub">本页为课程说明，不是判题入口；公开自测只验证公开样例，不产生正式课程成绩。</span>
-</div>
-<main>
-<h1>机器学习作业一 · 学生使用说明</h1>
-<p class="intro">用 C++ 标准库从零实现五项经典机器学习算法。官方评测使用 GCC 12、C++17 和 <code>-O2</code>；本机开发可使用兼容编译器。</p>
-
-<h2>五项任务与需要实现的方法</h2>
-<div class="card">
-<div class="table-scroll" role="region" aria-label="五项任务与方法" tabindex="0">
-<table>
-  <tr><th>任务</th><th>需要实现的方法</th><th>说明</th></tr>
-  <tr><td>Logistic Regression</td><td>fit / predict</td><td>二分类，标签为 0/1</td></tr>
-  <tr><td>Linear SVM</td><td>fit / predict</td><td>二分类，预测保持输入顺序</td></tr>
-  <tr><td>GBDT Regression</td><td>fit / predict</td><td>回归输出须为有限实数</td></tr>
-  <tr><td>K-Means</td><td>fit / predict</td><td>先训练，再预测 [0, K) 内簇编号</td></tr>
-  <tr><td>Discrete HMM</td><td>fit / predict</td><td>有状态标签的监督训练；预测 Viterbi 联合最优路径</td></tr>
-</table>
-</div>
-<p>全部接口以公开头文件 <a href="../starter/include/assignment.hpp">starter/include/assignment.hpp</a> 为准：保持 <code>assignment</code> 命名空间、类名与公开方法签名不变，可以修改 private 成员并在 <a href="../starter/src/assignment.cpp">starter/src/</a> 下增加辅助源码。仅使用 C++ 标准库，不提交预训练模型、可执行文件或第三方机器学习库。</p>
-</div>
-
-<h2>评分规则</h2>
-<div class="card">
-<ul>
-  <li>五项任务每项25分，可任选四项；完成五项时取最高四项，总分100分，占课程总评35%。课程总评60分规定不变。</li>
-  <li>效果为主，正确性、鲁棒性与效率为辅；综合表现前10%为满分档，随机/无信息基线为基础档。这是概要，不承诺只凭公开样例或单一指标获得任务25分。</li>
-  <li>分类关注准确率与F1，回归关注预测误差，聚类关注划分质量，HMM关注状态与整条路径正确性；还需满足接口、合法边界、数值稳定和效率要求。</li>
-  <li>每任务选取完整有效提交，不拼不同提交的子分，最终五取四。鼓励AI辅助，须如实声明并理解、验证实现；AI本身不直接加扣分。</li>
-  <li>正式计算、同分与截止规则以课程题面及公告为准。<a href="../docs/assignment-scoring-rules-20261010.html">评分与提交概要</a>不修改评测程序；公开自测不产生正式课程成绩。</li>
-</ul>
-</div>
-
-<h2>提交规范与时间安排</h2>
-<div class="card">
-<p>ZIP 根目录必须包含 <code>README.md</code>、<code>AI_USAGE.md</code>、<code>include/assignment.hpp</code>、<code>src/assignment.cpp</code>；其余仅允许 include/ 下的 .h/.hpp 和 src/ 下的 .cpp。两份 Markdown 均为非空 UTF-8 文本；未使用 AI 时在 AI_USAGE.md 写 <code>No AI assistance used.</code>。</p>
-<p>最多 64 个文件，每文件最多 1 MiB，解压总量和 ZIP 各最多 8 MiB，每成员压缩比最多 200。禁止符号链接、路径逃逸、重复路径、凭证、数据、答案、模型及二进制。请使用随课程公告提供的工具和提交说明。</p>
-<p><strong>提交入口开放时间另行通知。</strong>地址、开始和截止时刻见课程公告。以服务端完成收包及校验后的接收时刻判断是否截止；每学号每天最多 10 个新提交意图、最多 1 个未完成评测任务，原意图重试不重复计次。</p>
-</div>
-
-<h2>填写提交信息</h2>
-<div class="card">
-<p>请填写本人学号、姓名和昵称，提交及结果按学号归属。保留三个 export，学号按字符串处理并保留前导零；以下仅为虚构格式示例：</p>
-<pre>export STUDENT_ID=2026123456
-export STUDENT_NAME="Zhang San"
-export STUDENT_NICKNAME="zs"</pre>
-<p>学号自报不是本人认证；姓名和昵称不改变成绩归属，教师管理权限独立。设置变量后可检查本机格式：</p>
-<pre>python3 -B -m student_tools config</pre>
-<p>格式检查不提交任何数据，也不代表已登录或可提交。提交入口开放时间另行通知。</p>
-</div>
-
-<h2>本机可用的操作：自测与打包</h2>
-<div class="card">
-<p>下载课程公告提供的完整学生包，或下载学生仓库源码 ZIP 后解压；保留 <code>starter/</code>、<code>student_tools/</code>、<code>docs/</code>、<code>public/</code> 与 <code>data/public/</code> 的目录关系，不要只下载单个源文件。公开训练数据在 <code>data/public/training/</code>（classification.json供LR/SVM共用，另有gbdt.json、kmeans.json、hmm.json）；五任务公开诊断输入、答案与manifest在 <code>data/public/validation/</code>。公开数据不随作业提交。填写模板中的 README.md 与 AI_USAGE.md 后，在解压根目录选择已实现任务运行（Windows 下把 python3 换成 python）：</p>
-<pre>python3 -B -m student_tools selftest --project starter --tasks lr,svm,kmeans,hmm --public-data data/public/validation</pre>
-<p>自测通过后打包源码：</p>
-<pre>python3 -B -m student_tools package --project starter --output submission.zip</pre>
-<p>两个工具都有 <code>--help</code>。学生只需要完成模板代码并自测、打包；不需要执行课程侧的组包发布操作。</p>
-<p><strong>安全提示：本机自测会编译并执行 C++，不是安全沙箱。只运行自己编写或已审查的代码，不替陌生人运行提交包。</strong></p>
-</div>
-
-<h2>相关文件</h2>
-<div class="card">
-<ul>
-  <li><a href="leaderboard.html">成绩榜单</a>：file离线显示“暂无成绩”，不请求网络或生成排名；真实成绩开放按课程公告。</li>
-  <li><a href="../docs/student-guide.html">学生指南（HTML 阅读版）</a></li>
-  <li><a href="../starter/README.html">模板说明</a></li>
-  <li><a href="../starter/AI_USAGE.html">AI 使用说明模板（须按本人实际情况改写）</a></li>
-  <li><a href="../starter/include/assignment.hpp">公开头文件 assignment.hpp</a></li>
-  <li><a href="../starter/src/assignment.cpp">模板源文件 assignment.cpp</a></li>
-  <li><a href="../starter/tools/driver.cpp">本地测试驱动 driver.cpp</a></li>
-</ul>
-</div>
-
-<footer>本页仅提供课程说明，不保存提交；页面不含脚本、表单与外部资源。提交入口开放时间另行通知。</footer>
-</main>
-</body>
-</html>
+</style></head><body><div class="banner" role="note">说明已更新；代码、数据、工具同步中<span class="sub">在线提交、查分、自动榜未开放；HTTPS待确认；Windows NOT_RUN</span></div><main><h1>ML Assignment 1：课程说明</h1>
+<p><strong>2026-10-20 说明更新；新版模板、数据、工具同步中。在线提交、查分、自动榜尚未开放。</strong> 受信 HTTPS 正式 URL 尚未确认；Windows 实机 NOT_RUN。说明更新不是产品已经接通。</p>
+<h2>获取仓库</h2>
+<p>使用 <a href="https://github.com/ZeroGen-Lab/ML-Assignment-1">ZeroGen-Lab/ML-Assignment-1</a> 的 Code → Download ZIP，或在自己的机器 clone。它是仓库快照，不是教师自制发行ZIP。旧v0.3.1仅历史；学生提交自己源码仍保留package步骤。</p>
+<h2>最新任务合同</h2>
+<p>C++17与C++标准库，保留Matrix接口，不调用现成机器学习库。从LR、SVM、GBDT、KMeans、HMM选四或五项；SVM保留LinearSVM符号。</p>
+<p>GBDT为真实856维九类0..8，接口GBDTClassifier；当前公开模板仍可能旧回归，不能声称可执行新版示例。各任务200条公开训练；HMM200行=10条完整序列×20步，监督训练不拆散边界。</p>
+<p>拟采用路径data/training/{task}/train.csv、data/training/manifest.json、data/training/DATA-SOURCES.md及data/training/gbdt/manifest.json，不代表已进main；旧data/public/training不推荐混用。</p>
+<h2>分数与公开指标</h2>
+<p>每项25×q。分类Q=0.5×accuracy+0.5×macro_f1；HMM Q=0.5×state_accuracy+0.5×exact_sequence_accuracy；KMeans Q=0.6×ari+0.4×nmi。保留原始Q，q夹到[0,1]。</p>
+<p>所选四项全READY最高100，所选五项全READY最高125；课程同一提交至少四项READY后取最高四项，满分100。教师最终课程分另定。缺测None/null不补0，未执行NOT_RUN；baseline后置，不拿格式自测充正式分。</p>
+<p>榜单要求显示学号、昵称、不显示姓名；所有人可点击查看该提交允许公开的真实聚合指标。这里说明要求，不表示榜/API已接通。不公开隐藏标签、逐行预测或私日志。</p>
+<h2>当前工具与在线边界</h2>
+<p>学生源码流程保持package → submit → 同key retry → status/submissions。当前实际环境变量为STUDENT_ID、STUDENT_NAME、STUDENT_NICKNAME，分别为学号、姓名、昵称；文档中的NAME/NICKNAME是字段简称，不是另两个环境变量。三者均为自报信息，不是认证；不把身份资料写进公开仓库。</p>
+<p>在线入口未开放，不提供猜测或占位URL，不关闭TLS校验。保留原提交key，不在网络不明时制造重复提交。本地自测会在自己的机器编译执行源码，不是沙箱；只检查接口/格式或有限sanity，不是正式分。GBDT训练自身查询中常量合法预测也可通过，不证明泛化。</p>
+<h2>阅读入口</h2>
+<ul><li><a href="../README.html">仓库首页</a></li><li><a href="../docs/student-guide.html">学生指南</a></li><li><a href="../docs/dataset-columns.html">数据列说明</a></li><li><a href="../docs/current-trial-scoring.html">当前试运行评分说明</a></li><li><a href="../starter/README.html">模板说明</a></li><li><a href="../docs/assignment-scoring-rules-20261010.md">历史评分记录</a></li><li><a href="../docs/trial-pass-thresholds.md">历史阈值记录</a></li></ul></main></body></html>

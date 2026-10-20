@@ -1,48 +1,49 @@
-# 训练 CSV 字段与接口
+# 数据列说明：新版五任务公开训练材料
 
-适用 `course-uci-20261014-v3`，数据身份 `0f23098f6a76cf60424ca04bc1bfe1d7e96ad1ef1a59a632dd2b319ab162c671`（配套 v0.3.1 尚未发行，已发布 v0.3.0 仍为v1，不混用）；CSV位于 `data/public/training/`。五文件各200数据行：连续任务各200条正式train代表性子集，HMM10完整序列×20步。服务器正式fit不是公开200：LR/SVM1194train/606test、GBDT1199/601、Rice1199/601；HMM60/30完整序列。test与教师答案不随课程材料发布。
+2026-10-20。**新版数据、模板、工具同步中。** 本页描述拟采用合同，不证明这些文件已进入当前公开 main。旧 `data/public/training` 与旧 `v0.3.1` 只作历史，不与新版混用。
 
-连续任务按`f0..`列序组成`x`。特征已用**正式train**均值/尺度标准化，勿再次缩放；以下单位指原始量，CSV数值已无原始单位。`y`未标准化、不进`x`；预测不提供答案。公开200可自行划验证集；提交后服务器使用完整正式train训练。
+## 拟采用目录
 
-## LR与SVM：`lr-train.csv`、`svm-train.csv`
+| 任务 | 拟采用 CSV 路径 | 训练行数 | 列与标签 |
+| --- | --- | --- | --- |
+| LR | `data/training/lr/train.csv` | 200 | `f0,...,f56,y`，57 个特征，末列二分类标签 |
+| SVM | `data/training/svm/train.csv` | 200 | 同 LR；共享原训练记录 |
+| GBDT | `data/training/gbdt/train.csv` | 200 | `label,x000,...,x855`，首列九类标签，其余 856 个真实词频特征 |
+| KMeans | `data/training/kmeans/train.csv` | 200 | `f0,...,f6`，7 个特征，无类别标签列 |
+| HMM | `data/training/hmm/train.csv` | 200 | `sequence_id,step,observation,state_label`，10 条完整序列 × 20 步 |
 
-两文件逐字相同，均为`f0..f56,y`，UCI Spambase邮件特征；同一正式split、同一标准化、同一公开200。分别实现LogisticRegression与LinearSVM，不是两个独立数据来源。
+拟采用五任务合并元数据为 `data/training/manifest.json`，署名、许可与变更记录为 `data/training/DATA-SOURCES.md`；GBDT 单项公开元数据保留 `data/training/gbdt/manifest.json`。**以实际同步后的同版文件为准**，不是把旧总 manifest 改名后直接使用。旧总 manifest 包含旧 GBDT 回归数据，不代表新版。
 
-- `f0..f47`：48个指定词频率，原值=该词次数/总词数×100%；如`f0=word_freq_make`、`f1=word_freq_address`，不能重编号。
-- `f48..f53`：字符`; ( [ ! $ #`频率，依此次序；原值=该字符次数/总字符数×100%。
-- `f54..f56`：大写连续段长度平均值、最长值、总和（`capital_run_length_average/longest/total`）。
+## LR / SVM：Spambase
 
-`y=1`垃圾邮件，`y=0`非垃圾邮件；`LogisticRegression.fit(x,y,seed)`或`LinearSVM.fit(x,y,seed)`，`predict(x)`按输入行序返回0/1。
+200 条公开训练记录，57 维，末列 `y` 为整数 `0/1`。LR 与 SVM 共享相同固定 CSV 记录，不能视为两个独立数据集。
 
-## GBDT：`gbdt-train.csv`
+特征沿用原 formal-train 统计标准化后的固定值；不能声称标准化只由这 200 条公开记录拟合，也不要擅自重复标准化。本次复用不重新清理、取样或 fit 变换。
 
-`f0,f1,f2,f3,y`，UCI CCPP第1工作表。原字段依次为AT环境温度（°C）、V排气真空度（cm Hg）、AP环境气压（毫巴）、RH相对湿度（%）。`y=PE`，每小时净电力输出（MW）。`GBDTRegressor.fit(x,y,seed)`，`predict(x)`逐行返回实数PE，不是类别。
+来源：[UCI Spambase](https://archive.ics.uci.edu/dataset/94/spambase)，DOI `10.24432/C53G6X`。作者 Hopkins, M.; Reeber, E.; Forman, G.; Suermondt, J.。固定来源记录为 CC BY 4.0，完整署名与变更沿配套来源文档。
 
-## KMeans：`kmeans-train.csv`
+## GBDT：CNAE-9 九类分类
 
-仅`f0..f6`，UCI Rice Cammeo and Osmancik形态特征，依次为：
+必须保留 **856** 个真实词频特征，标签从原 `1..9` 映射为 **0..8**。CSV 首列 `label`，后续顺序为 `x000` 至 `x855`。特征为非负整数词频；不是旧回归数据，也不接受浮点回归预测。
 
-| 列 | 原字段 | 含义 |
-|---|---|---|
-| f0 | Area | 稻粒区域像素面积 |
-| f1 | Perimeter | 稻粒边界周长 |
-| f2 | Major_Axis_Length | 等效椭圆长轴长度 |
-| f3 | Minor_Axis_Length | 等效椭圆短轴长度 |
-| f4 | Eccentricity | 等效椭圆偏心率 |
-| f5 | Convex_Area | 凸包像素面积 |
-| f6 | Extent | 稻粒面积/外接矩形面积 |
+公开训练 200 条，类别配额为 `23,23,22,22,22,22,22,22,22`。200 条子集中只有部分列出现非零值，不改变每行 856 维合同，不补维、不裁列。来源：[UCI CNAE-9](https://archive.ics.uci.edu/dataset/233/cnae+9)，DOI `10.24432/C51G7P`，Ciarelli, P. & Oliveira, E. (2009)，固定来源记录为 CC BY 4.0。
 
-**无类别/答案列**。`KMeans.fit(x,2,seed)`；`predict(x)`逐行返回簇编号0..1，簇编号不等于品种标签，允许置换。教师品种标签仅用于划分、审核与ARI/NMI评价，不进入公开fit。正式数据选1800真行，近重复canonical组不跨train/test；不复制补样本。
+公开源可识别，不承诺抗查表的秘密 holdout。本地公开 GBDT 检查只将 200 条训练自身作为查询，只核输出数量、整数和标签域；常量合法输出也可通过，**不是泛化分或正式参考分**。本页不提供教师评估记录、选择索引或隐藏标签。
 
-## HMM：`hmm-train.csv`
+## KMeans：Rice Cammeo and Osmancik
 
-固定合成监督序列，非UCI。列为`sequence_id,step,observation,state_label`：
+200 条公开训练记录，7 维，无类别标签列。`f0,...,f6` 依次对应 Area、Perimeter、Major_Axis_Length、Minor_Axis_Length、Eccentricity、Convex_Area、Extent。沿用原训练集 z-score 变换后的固定字节，不重新拟合。`k=2` 沿公开合同，不从 CSV 伪造评估 truth。
 
-- `sequence_id`：公开序列本地编号0..9，只用于分组，不是特征，也不是教师内部sequence_id。
-- `step`：序列内步号0..19；重组10条完整公开序列，不拆为独立样本。服务器正式train60条、test30条，各20步。
-- `observation`：符号编号0..3，组成`observations`。
-- `state_label`：监督隐藏状态编号0..2，组成`state_labels`；与符号是两套编号。
+来源：[UCI Rice Cammeo and Osmancik](https://archive.ics.uci.edu/dataset/545/rice+cammeo+and+osmancik)，UCI DOI `10.24432/C5MW4Z`；Cinar and Koklu (2019)，论文 DOI `10.18201/ijisae.2019355381`。固定来源记录为 CC BY 4.0。
 
-`DiscreteHMM.fit(observations,state_labels,3,4,seed)`：3状态/4符号。`predict(observations)`每条返回等长状态路径，编号沿用训练标签，不重编号。真实参数与正式test状态路径不发布。
+## HMM：课程生成的监督序列
 
-来源：[Spambase](https://archive.ics.uci.edu/dataset/94/spambase)、[CCPP](https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant)、[Rice](https://archive.ics.uci.edu/dataset/545/rice+cammeo+and+osmancik)。许可与引用见[数据来源与许可](../data/public/training/DATA-SOURCES.md)。公开原始UCI标签可能找回，课程holdout未发布不等于保密或反作弊保证。旧v1/v2产物保持原版，不与v3混用。
+200 行不是 200 条独立序列，而是 **10 条完整序列，每条 20 步**。同一 `sequence_id` 内按 `step=0..19` 保持顺序；`observation` 域为 `0..3`，`state_label` 域为 `0..2`。监督 fit 同时使用真实观测与状态标签；状态含义跨序列一致，不任意拆分或拼接。
+
+复用既有课程生成训练 CSV，不重新生成，不公开生成参数或教师评估 truth。**独立许可证据未在固定来源记录中注明，许可状态 PARTIAL，license 为 null**；它不是上述 UCI 数据，不能自动套用 CC BY 4.0。来源整理不等于补造授权，最终公开权利表述需单独明确。
+
+## 版本与执行边界
+
+数据目录存在、CSV 哈希一致或新文档发布，均不证明服务器已经使用同版正式评估集、源码已合规、算法有效或正式成绩可用。未运行指标保持 `NOT_RUN`，缺测保持 `None/null`。baseline 后置，不将公开自测当实测。
+
+返回[学生指南](student-guide.md)或[当前试运行评分说明](current-trial-scoring.md)。
