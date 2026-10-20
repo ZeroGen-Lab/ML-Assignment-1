@@ -1,1 +1,0 @@
-{"data_version":"course-uci-20261014-v3","dataset_id":"0f23098f6a76cf60424ca04bc1bfe1d7e96ad1ef1a59a632dd2b319ab162c671","evaluation_mode":"hmm_state_accuracy","task":"hmm","validation_answers":[[1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2],[0,0,0,1,1,1,1,0,0,2,2,2,0,0,0,0,2,2,2,2]],"validation_ids":["hmm:22","hmm:38"]}
