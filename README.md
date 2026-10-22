@@ -72,8 +72,6 @@ GBDT 的 **856维均为真实特征**，标签不计入特征维度。不要补�
 | K-Means | `kmeans/train.csv` | `f0` 至 `f6` 为7维特征，不提供类别标签列 |
 | HMM | `hmm/train.csv` | `sequence_id,step,observation,state_label` |
 
-LR/SVM 使用 Spambase 数据，K-Means 使用 Rice Cammeo and Osmancik 数据，GBDT 使用 CNAE-9 数据。具体来源、署名及数据处理说明随训练数据提供。
-
 LR/SVM 和 K-Means 的特征已完成课程规定的标准化，不需要再次标准化。GBDT 使用提供的856列词频特征，按文件中的原列顺序读取。分类标签不能作为输入特征。
 
 你可以自行从提供的数据中划分训练集和验证集，检查模型效果。不要将样本条数写死在算法中；接口应根据实际输入长度工作。课程服务器使用规定的训练、测试数据调用你的实现，测试标签不作为预测输入，也不随提交包上传。
