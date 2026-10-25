@@ -45,11 +45,17 @@ _FIELDS = {'submit': frozenset({'idempotency_key', 'ai_declaration'}),
 
 
 def _parse_origin(base_url):
+    """Parse an exact http:// or https:// origin.
+
+    Returns (host, port, secure); https keeps the exact previous validation
+    and the 443 default, http uses port 80 by default and keeps every other
+    rule (no query/fragment/userinfo/path, legal host, port range) unchanged.
+    """
     if type(base_url) is not str:
-        raise ValueError('base_url must be an exact HTTPS origin string')
+        raise ValueError('base_url must be an exact origin string (http or https)')
     parts = urllib.parse.urlsplit(base_url)
-    if parts.scheme != 'https' or parts.query or parts.fragment:
-        raise ValueError('base_url must be an exact HTTPS origin')
+    if parts.scheme not in ('http', 'https') or parts.query or parts.fragment:
+        raise ValueError('base_url must be an exact origin (http or https)')
     if parts.username is not None or parts.password is not None:
         raise ValueError('base_url must not carry userinfo')
     if parts.path not in ('', '/'):
@@ -58,8 +64,9 @@ def _parse_origin(base_url):
     if not host or len(host) > 253:
         raise ValueError('base_url has no usable host')
     port = parts.port  # raises ValueError itself on an illegal port token
+    secure = parts.scheme == 'https'
     if port is None:
-        port = _DEFAULT_PORT
+        port = _DEFAULT_PORT if secure else 80
     if not 1 <= port <= 65535:
         raise ValueError('base_url port out of range')
     if _HOST.fullmatch(host) is None:
@@ -67,7 +74,7 @@ def _parse_origin(base_url):
             ipaddress.ip_address(host)
         except ValueError:
             raise ValueError('base_url host is not a valid name or address') from None
-    return host, port
+    return host, port, secure
 
 
 def _gate(operation, fields, payload):
@@ -189,7 +196,7 @@ def make_request(base_url, *, get_headers=None, timeout=30):
     person. It is called once per request before any connection is opened,
     so a missing or broken channel fails closed with zero network activity.
     """
-    host, port = _parse_origin(base_url)
+    host, port, secure = _parse_origin(base_url)
 
     def request(operation, fields, *, payload=None):
         if get_headers is None:
@@ -206,8 +213,15 @@ def make_request(base_url, *, get_headers=None, timeout=30):
             document['payload_b64'] = base64.b64encode(payload).decode('ascii')
         body = json.dumps(document, separators=(',', ':')).encode('utf-8')
         try:
-            connection = http.client.HTTPSConnection(
-                host, port, timeout=timeout, context=ssl.create_default_context())
+            if port is None:
+                pass
+            if secure:
+                connection = http.client.HTTPSConnection(
+                    host, port, timeout=timeout,
+                    context=ssl.create_default_context())
+            else:
+                connection = http.client.HTTPConnection(host, port,
+                                                        timeout=timeout)
             try:
                 connection.request('POST', _PATHS[operation], body=body, headers=headers)
                 response = connection.getresponse()

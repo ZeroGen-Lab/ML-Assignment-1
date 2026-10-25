@@ -81,12 +81,46 @@ def _parser():
     # stay metadata for attribution, never authentication.
     for command in online:
         command.add_argument('--endpoint', default=None,
-                             help='explicit HTTPS origin for the self-report request')
+                             help='explicit origin (http:// or https://) for the self-report request')
     return parser
 
 
 def _output(value):
     print(json.dumps(value, ensure_ascii=True, sort_keys=True))
+
+
+def _print_readable(data):
+    """Human-readable summary after the JSON envelope (status/submissions).
+
+    Echoes server values only; nothing is computed or filled in. Missing
+    sums print as 'absent', never as zero.
+    """
+    if type(data) is not dict or data.get('status') is None:
+        return
+    print('summary: status=' + str(data['status'])
+          + ' attempt=' + str(data.get('attempt')))
+    result = data.get('result')
+    if type(result) is not dict or result.get('available') is not True:
+        print('summary: result not available yet')
+        return
+    for task in ('lr', 'svm', 'gbdt', 'kmeans', 'hmm'):
+        slot = (result.get('tasks') or {}).get(task)
+        if type(slot) is dict and 'outcome' in slot:
+            print('summary: task ' + task + ' outcome=' + str(slot['outcome']))
+    points = result.get('points')
+    if type(points) is dict:
+        for key in ('task_score_sum', 'course_score'):
+            if key not in points:
+                continue
+            value = points.get(key)
+            if type(value) is float or type(value) is int:
+                print('summary: ' + key + '=' + format(value, '.4f'))
+            else:
+                print('summary: ' + key + '=absent')
+    error = result.get('error')
+    if error is not None:
+        print('summary: failure stage=' + str(error.get('stage'))
+              + ' code=' + str(error.get('code')))
 
 
 def _local_data(record):
@@ -209,6 +243,10 @@ def main(argv=None, *, request=None):
         _output({'ok': False, 'error': {'code': error.code}})
         return 1
     _output({'ok': True, 'data': data})
+    try:
+        _print_readable(data)
+    except Exception:
+        pass
     return 0
 
 
